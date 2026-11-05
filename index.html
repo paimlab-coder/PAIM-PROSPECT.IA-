@@ -1,266 +1,1202 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Fluxograma BDR</title>
-
-<style>
-
-body{
-    margin:0;
-    padding:30px;
-    font-family:Arial, sans-serif;
-    background:#f5f7fa;
-}
-
-h1{
-    text-align:center;
-    color:#1e3a5f;
-    margin-bottom:40px;
-}
-
-.section{
-    background:white;
-    padding:25px;
-    margin-bottom:30px;
-    border-radius:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-}
-
-.section h2{
-    text-align:center;
-    color:#1e3a5f;
-    margin-bottom:25px;
-}
-
-.flow{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    overflow-x:auto;
-    padding:15px 0;
-}
-
-.box{
-    min-width:220px;
-    min-height:100px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:15px;
-
-    text-align:center;
-
-    border-radius:10px;
-    border:2px solid;
-
-    font-weight:bold;
-}
-
-.process{
-    background:#dbeafe;
-    border-color:#2563eb;
-}
-
-.action{
-    background:#ede9fe;
-    border-color:#7c3aed;
-}
-
-.success{
-    background:#dcfce7;
-    border-color:#16a34a;
-}
-
-.decision{
-    min-width:170px;
-    height:170px;
-    background:#fee2e2;
-    border:2px solid #ef4444;
-
-    clip-path:polygon(
-        50% 0%,
-        100% 50%,
-        50% 100%,
-        0% 50%
-    );
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-    text-align:center;
-    font-weight:bold;
-}
-
-.arrow{
-    font-size:30px;
-    color:#64748b;
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>Fluxograma Operacional BDR</h1>
-
-<div class="section">
-
-<h2>Recepção e Qualificação</h2>
-
-<div class="flow">
-
-<div class="box process">
-Recebimento dos Leads pelo Marketing
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box process">
-Leitura e Exclusão de Leads Duplicados
-</div>
-
-<div class="arrow">→</div>
-
-<div class="decision">
-CNPJ Duplicado?
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Tratar Leads
-</div>
-
-<div class="arrow">→</div>
-
-<div class="decision">
-Lead Qualificado?
-</div>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<h2>Prospecção e Contato</h2>
-
-<div class="flow">
-
-<div class="box action">
-Separar Decisores e Não Decisores
-</div>
-
-<div class="arrow">→</div>
-
-<div class="decision">
-É Decisor?
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Enviar Mailing
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Follow-up WhatsApp
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box process">
-Análise do Retorno
-</div>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<h2>Qualificação BANT</h2>
-
-<div class="flow">
-
-<div class="decision">
-Deseja Mais Informações?
-</div>
-
-<div class="arrow">→</div>
-
-<div class="decision">
-BANT Atendido?
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box success">
-Cliente Potencial Comprador
-</div>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<h2>Encaminhamento Comercial</h2>
-
-<div class="flow">
-
-<div class="box action">
-Registrar Lead no CRM
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Registrar Solicitação
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Enviar E-mail ao Cliente
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box process">
-Relacionamento com Cliente
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box process">
-Follow-up da Oportunidade
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Validação da OP
-</div>
-
-<div class="arrow">→</div>
-
-<div class="box action">
-Forecast Comercial
-</div>
-
-</div>
-
-</div>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Prospect BSA | Inteligência de Mercado</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <style>
+            :root {
+                --c1: #0B2545;
+                --c2: #C8102E;
+                --bg: #f4f6fa;
+                --card: #fff;
+                --tx: #1b2430;
+                --mut: #667085;
+                --bd: #dde3ec
+            }
+
+            * {
+                box-sizing: border-box
+            }
+
+            body {
+                margin: 0;
+                font-family: Segoe UI,Arial,sans-serif;
+                background: var(--bg);
+                color: var(--tx)
+            }
+
+            header {
+                background: var(--c1);
+                border-bottom: 4px solid var(--c2);
+                padding: 14px 24px;
+                display: flex;
+                align-items: center;
+                gap: 18px
+            }
+
+            header img {
+                height: 40px
+            }
+
+            header h1 {
+                color: #fff;
+                font-size: 20px;
+                margin: 0;
+                font-weight: 600
+            }
+
+            main {
+                display: grid;
+                grid-template-columns: 330px 1fr;
+                gap: 18px;
+                padding: 18px;
+                max-width: 1700px;
+                margin: auto
+            }
+
+            @media(max-width: 900px) {
+                main {
+                    grid-template-columns:1fr
+                }
+            }
+
+            .card {
+                background: var(--card);
+                border: 1px solid var(--bd);
+                border-radius: 10px;
+                padding: 16px;
+                margin-bottom: 14px
+            }
+
+            h2 {
+                font-size: 14px;
+                margin: 0 0 10px;
+                color: var(--c1);
+                text-transform: uppercase;
+                letter-spacing: .04em
+            }
+
+            label {
+                display: block;
+                font-size: 12px;
+                color: var(--mut);
+                margin: 8px 0 3px
+            }
+
+            input[type=text],input[type=number],select {
+                width: 100%;
+                padding: 7px 8px;
+                border: 1px solid var(--bd);
+                border-radius: 6px;
+                font-size: 13px
+            }
+
+            input[type=file] {
+                font-size: 12px;
+                width: 100%
+            }
+
+            .chk {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                font-size: 13px;
+                margin: 8px 0;
+                color: var(--tx)
+            }
+
+            button {
+                background: var(--c2);
+                color: #fff;
+                border: 0;
+                border-radius: 6px;
+                padding: 9px 14px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                margin-top: 10px;
+                width: 100%
+            }
+
+            button.sec {
+                background: var(--c1)
+            }
+
+            button:disabled {
+                opacity: .5;
+                cursor: wait
+            }
+
+            .map {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 8px
+            }
+
+            .kpis {
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                gap: 12px
+            }
+
+            .kpi {
+                background: var(--card);
+                border: 1px solid var(--bd);
+                border-radius: 10px;
+                padding: 12px 16px
+            }
+
+            .kpi b {
+                display: block;
+                font-size: 26px;
+                color: var(--c1)
+            }
+
+            .kpi span {
+                font-size: 12px;
+                color: var(--mut)
+            }
+
+            .tw {
+                overflow: auto;
+                max-height: 600px;
+                border: 1px solid var(--bd);
+                border-radius: 8px;
+                background: #fff
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 12px
+            }
+
+            th {
+                position: sticky;
+                top: 0;
+                background: var(--c1);
+                color: #fff;
+                text-align: left;
+                padding: 7px 9px;
+                white-space: nowrap
+            }
+
+            td {
+                padding: 6px 9px;
+                border-bottom: 1px solid #eef1f6;
+                white-space: nowrap
+            }
+
+            .A {
+                color: #067647;
+                font-weight: 700
+            }
+
+            .B {
+                color: #b54708;
+                font-weight: 700
+            }
+
+            .C {
+                color: var(--mut)
+            }
+
+            #st {
+                font-size: 12px;
+                color: var(--mut);
+                margin-top: 8px;
+                min-height: 16px
+            }
+
+            .row {
+                display: flex;
+                gap: 10px
+            }
+
+            .row button {
+                margin-top: 12px
+            }
+
+            small {
+                color: var(--mut);
+                font-size: 11px;
+                line-height: 1.4;
+                display: block;
+                margin-top: 8px
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <img src="https://servicos.bertolini.com.br/uploads/1/avatars/2022/04/338253949111931/Bertolini-white.png" alt="Bertolini">
+            <h1>Prospect BSA | Inteligência de Mercado</h1>
+        </header>
+        <div id="ban" style="display:none;background:#fff3cd;color:#664d03;padding:9px 24px;font-size:13px;border-bottom:1px solid #ffe69c"></div>
+        <main>
+            <aside>
+                <div class="card">
+                    <h2>1. Base de leads</h2>
+                    <input type="file" id="arq" accept=".csv,.tsv,.txt,.psv,.dat,.json,.jsonl,.ndjson,.parquet,.xlsx,.xlsm,.xlsb,.xls,.ods,.gz,.html,.xml">
+                    <button id="bCarregar">Carregar base</button>
+                    <small>Dica: ao escolher ou arrastar o arquivo para esta página, a leitura começa sozinha.</small>
+                    <small>O arquivo é lido no seu computador, sem upload. CSV, TSV, TXT, JSON, Parquet, Excel (xlsx, xls, ods) ou .gz; o app descobre o formato, o separador e a codificação. Se o arquivo de 6 GB travar o navegador, filtre antes (ativas, UF, CNAEs) e use a versão menor.</small>
+                    <div id="st"></div>
+                </div>
+                <div class="card" id="cMap" hidden>
+                    <h2>2. Colunas</h2>
+                    <div class="map" id="map"></div>
+                    <small>Capital social: formato (1.234,56 ou 1234.56) detectado automaticamente.</small>
+                </div>
+                <div class="card" id="cFil" hidden>
+                    <h2>3. Filtros</h2>
+                    <label>UF (separe por vírgula)</label>
+                    <input type="text" id="fUF" value="RS,SC,PR,SP">
+                    <label>CNAE começa com</label>
+                    <input type="text" id="fCNAE" value="52,46,10,11,25,28">
+                    <label>Capital social mínimo (R$)</label>
+                    <input type="number" id="fCap" value="100000" step="50000">
+                    <label>Município contém</label>
+                    <input type="text" id="fCid">
+                    <div class="chk">
+                        <input type="checkbox" id="fAtiv" checked>
+                        <span>Somente situação ativa</span>
+                    </div>
+                    <div class="chk">
+                        <input type="checkbox" id="fCont">
+                        <span>Exigir telefone ou e-mail</span>
+                    </div>
+                    <div class="chk">
+                        <input type="checkbox" id="fAll" checked>
+                        <span>Incluir todas as colunas do arquivo (prefixo arq_)</span>
+                    </div>
+                    <div class="chk">
+                        <input type="checkbox" id="fBench" checked>
+                        <span>Ocultar concorrentes/parceiros do benchmark</span>
+                    </div>
+                    <label>Máx. de linhas por busca</label>
+                    <input type="number" id="fN" value="50000" step="5000">
+                    <button id="bBuscar">Buscar leads</button>
+                </div>
+            </aside>
+            <section>
+                <div class="kpis">
+                    <div class="kpi">
+                        <b id="kT">–</b>
+                        <span>Leads encontrados</span>
+                    </div>
+                    <div class="kpi">
+                        <b id="kE">–</b>
+                        <span>Retornados</span>
+                    </div>
+                    <div class="kpi">
+                        <b id="kA">–</b>
+                        <span>Prioridade A</span>
+                    </div>
+                </div>
+                <div class="card" style="margin-top:14px">
+                    <h2>Skills aplicadas (regras embutidas no app)</h2>
+                    <div class="row">
+                        <button class="sec" id="bDiag">Diagnóstico da base (Dados e BI)</button>
+                        <button class="sec" id="bRank">Ranking de segmentos e UFs (Inteligência de Mercado)</button>
+                    </div>
+                    <div class="row">
+                        <button class="sec" id="bBench">Importar benchmark (concorrentes/parceiros)</button>
+                    </div>
+                    <input type="file" id="bIn" accept=".xlsx,.csv" hidden>
+                    <div id="ia" style="margin-top:12px"></div>
+                    <small>Contatos (telefones, e-mails e nomes) vêm somente do arquivo e ficam como "Não confirmado"; o app não deduz e-mails a partir de nomes. Nomes de pessoas são dado pessoal: use só para prospecção B2B legítima.</small>
+                    <small>As skills do Claude não rodam dentro de uma página HTML: o app aplica as regras delas como código (qualidade cadastral, score com pesos documentados, rankings, tipo de unidade, hipóteses e próxima ação, cruzamento com benchmark). A pesquisa na web das skills Benchmark e Prospect BSA continua no Claude: gere a lista lá, exporte em Excel e importe aqui.</small>
+                </div>
+                <div class="card" style="margin-top:14px">
+                    <h2>Acumulado de todos os estados</h2>
+                    <div class="kpis">
+                        <div class="kpi">
+                            <b id="aT">0</b>
+                            <span>Leads acumulados (sem duplicar CNPJ)</span>
+                        </div>
+                        <div class="kpi">
+                            <b id="aU">0</b>
+                            <span>Estados no acumulado</span>
+                        </div>
+                        <div class="kpi">
+                            <b id="aA">0</b>
+                            <span>Prioridade A</span>
+                        </div>
+                    </div>
+                    <div id="aUF" style="font-size:12px;color:var(--mut);margin:10px 0"></div>
+                    <div class="chk">
+                        <input type="checkbox" id="auto" checked>
+                        <span>Adicionar cada busca ao acumulado automaticamente</span>
+                    </div>
+                    <label>Rótulo desta extração (opcional, ex.: RS - nov/2026)</label>
+                    <input type="text" id="rot">
+                    <div class="row">
+                        <button class="sec" id="bAdd" disabled>Adicionar busca ao acumulado</button>
+                        <button class="sec" id="bView">Ver acumulado</button>
+                    </div>
+                    <div class="row">
+                        <button class="sec" id="bImp">Importar acumulado (Excel/CSV)</button>
+                        <button id="bLimpa">Limpar acumulado</button>
+                    </div>
+                    <input type="file" id="aImp" accept=".xlsx,.csv" hidden>
+                    <small>O acumulado fica salvo neste navegador (IndexedDB) e permanece ao fechar a página. Carregue um estado, busque, e repita com o próximo: os leads se somam e o mesmo CNPJ não duplica (fica o de maior score). Baixe o acumulado de vez em quando como backup.</small>
+                </div>
+                <div class="card" style="margin-top:14px">
+                    <div id="vt" style="font-size:13px;font-weight:600;color:var(--c1);margin-bottom:8px">Resultado da busca</div>
+                    <div class="tw">
+                        <table id="tb">
+                            <thead></thead>
+                            <tbody>
+                                <tr>
+                                    <td>Carregue a base e clique em Buscar leads.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <button class="sec" id="pP">‹ Anterior</button>
+                        <button class="sec" id="pN">Próxima ›</button>
+                    </div>
+                    <small id="pI"></small>
+                    <div class="row">
+                        <button class="sec" id="bX" disabled>Baixar Excel</button>
+                        <button class="sec" id="bC" disabled>Baixar CSV</button>
+                    </div>
+                    <small>Score: CNAE (até 30) + capital (até 25) + UF prioritária (15) + contatos (15). A tela mostra até 500 linhas; a exportação leva todas. Solução sugerida é uma premissa inicial editável.</small>
+                </div>
+            </section>
+        </main>
+        <script type="module">
+            let duckdb;
+
+            /* ===== REGRAS EDITÁVEIS ===== */
+            const UF_PRIORITARIAS = ['RS', 'SC', 'PR', 'SP'];
+            const PTS_CNAE = [['52', 30], ['46', 25], ['47', 15], ['10', 25], ['11', 25]];
+            const IND = [12, 33];
+            const PTS_CAP = [[10000000, 25], [1000000, 20], [300000, 12], [100000, 6]];
+            const ALIAS = {
+                cnpj: ['cnpj'],
+                razao: ['razaosocial', 'nomeempresarial', 'razao', 'empresa', 'nome'],
+                fantasia: ['fantasia'],
+                cnae: ['cnaefiscalprincipal', 'cnaeprincipal', 'cnae', 'atividade'],
+                capital: ['capitalsocial', 'capital'],
+                uf: ['uf', 'estado', 'sigla'],
+                cidade: ['municipio', 'cidade'],
+                situacao: ['situacaocadastral', 'situacao'],
+                telefone: ['telefone1', 'telefone', 'fone', 'celular', 'whatsapp', 'tel'],
+                email: ['email', 'correioeletronico'],
+                site: ['website', 'site', 'url'],
+                ddd: ['ddd1', 'ddd'],
+                telefone2: [],
+                email2: [],
+                contato: ['nomesocio', 'socio', 'responsavel', 'contato', 'representante']
+            };
+            /* ============================ */
+
+            const $ = id => document.getElementById(id);
+            const st = t => {
+                $('st').textContent = t;
+                const b = $('ban');
+                b.textContent = t;
+                b.style.display = t ? 'block' : 'none';
+            }
+            ;
+            const q = c => '"' + c.replace(/"/g, '""') + '"';
+            const esc = s => String(s ?? '').replace(/[&<>"]/g, m => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;'
+            }[m]));
+            const lit = s => String(s).replace(/'/g, "''");
+            let db, conn, cols = [], mp = {}, rows = [], acum = [], view = 'busca', pg = 0;
+            const PS = 100;
+            const idb = () => new Promise( (res, rej) => {
+                const r = indexedDB.open('prospect_bsa', 1);
+                r.onupgradeneeded = () => r.result.createObjectStore('kv');
+                r.onsuccess = () => res(r.result);
+                r.onerror = () => rej(r.error)
+            }
+            );
+            async function kvGet(k) {
+                try {
+                    const d = await idb();
+                    return await new Promise(r => {
+                        const g = d.transaction('kv').objectStore('kv').get(k);
+                        g.onsuccess = () => r(g.result);
+                        g.onerror = () => r(undefined)
+                    }
+                    )
+                } catch (_) {
+                    return undefined
+                }
+            }
+            async function kvSet(k, v) {
+                try {
+                    const d = await idb();
+                    await new Promise(r => {
+                        const t = d.transaction('kv', 'readwrite');
+                        t.objectStore('kv').put(v, k);
+                        t.oncomplete = () => r();
+                        t.onerror = () => r()
+                    }
+                    )
+                } catch (_) {}
+            }
+            const chave = r => {
+                let c = String(r.cnpj || '').replace(/\D/g, '');
+                if (c.length >= 9 && c.length < 14)
+                    c = c.padStart(14, '0');
+                return c || [r.razao, r.cidade, r.uf].map(x => String(x || '').toUpperCase().trim()).join('|')
+            }
+            ;
+            const cur = () => view === 'acum' ? acum : rows;
+            /* ===== Regras das skills (Dados e BI + Inteligência de Mercado + Benchmark) ===== */
+            const SEG = {
+                '52': ['Armazenagem e apoio ao transporte', 'Atividade-fim de armazenagem: possível demanda por densidade e automação.'],
+                '46': ['Comércio atacadista', 'Atacado costuma ter muitos itens e giro alto: possível demanda por porta-pallet e flow rack.'],
+                '47': ['Comércio varejista', 'Varejo com centro de distribuição próprio pode demandar porta-pallet; validar se há CD.'],
+                '10': ['Alimentos', 'Estoque com validade e lotes: possível aderência a Push Back e Dinâmico.'],
+                '11': ['Bebidas', 'Alto volume de pallets por SKU: possível aderência a Drive-In e Push Back.'],
+                '25': ['Produtos de metal', 'Insumos e produto acabado: possível demanda por porta-pallet, cantilever e mezanino.'],
+                '28': ['Máquinas e equipamentos', 'Peças e componentes: possível demanda por mezanino e cantilever.'],
+                '29': ['Automotivo', 'Alta variedade de itens: possível demanda por flow rack e mezanino.'],
+                '21': ['Farmacêutico', 'Rastreabilidade e controle de lote: possível demanda por sistemas dinâmicos e automação.'],
+                '20': ['Químicos', 'Pallets e restrições de armazenagem: possível demanda por porta-pallet; validar normas.'],
+                '31': ['Móveis', 'Volumes grandes: possível demanda por porta-pallet e cantilever.'],
+                '49': ['Transporte terrestre', 'Só é prospecto se houver armazenagem própria; qualificar.']
+            };
+            const segNome = c => (SEG[c] || ['Divisão ' + (c || '?')])[0];
+            const hip = c => (SEG[c] && SEG[c][1]) || (+c >= 12 && +c <= 33 ? 'Indústria: possível demanda por porta-pallet e mezanino.' : 'Sem hipótese setorial definida; qualificar por sinais de expansão.');
+            const num = v => typeof v === 'bigint' ? Number(v) : v;
+            const dig = s => String(s ?? '').replace(/\D/g, '');
+            const normN = s => String(s ?? '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]/g, '');
+            let bench = new Set();
+            const isBench = r => {
+                const c = dig(r.cnpj);
+                return (c.length >= 8 && bench.has('c' + c.slice(0, 8))) || (normN(r.razao) !== '' && bench.has('n' + normN(r.razao)))
+            }
+            ;
+            const mailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e ?? '').trim());
+            const nc = c => normN(c);
+            const detect = k => {
+                const pick = (re, ex) => cols.find(c => re.test(nc(c)) && !(ex && ex.test(nc(c)))) || '';
+                if (k === 'telefone2')
+                    return pick(/(TELEFONE|FONE|CELULAR|TEL).*(2|SECUND)/);
+                if (k === 'email2')
+                    return pick(/(EMAIL|CORREIO).*(2|SECUND)/);
+                const ex = (k === 'telefone' || k === 'email' || k === 'ddd') ? /(2|SECUND)/ : (k === 'cnae' ? /SECUND/ : (k === 'razao' ? /FANTASIA|SOCIO/ : null));
+                for (const al of ALIAS[k]) {
+                    const r = cols.find(c => nc(c).includes(al.toUpperCase()) && !(ex && ex.test(nc(c))));
+                    if (r)
+                        return r;
+                }
+                return '';
+            }
+            ;
+            const fone = (ddd, n) => {
+                let d = dig(n);
+                const dd = dig(ddd);
+                if (d.length <= 9 && dd.length === 2)
+                    d = dd + d;
+                if (d.length === 12 && d[0] === '0')
+                    d = d.slice(1);
+                return d;
+            }
+            ;
+            const foneFmt = d => d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d.length === 10 ? `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}` : '';
+            const foneTipo = d => d.length === 11 && d[2] === '9' ? 'Celular' : d.length === 10 && /[2-5]/.test(d[2]) ? 'Fixo' : '';
+            const PREF = ['cnpj', 'razao', 'fantasia', 'prioridade', 'score', 'solucao_sugerida', 'contato_nome', 'telefone_formatado', 'tipo_telefone', 'telefone2_formatado', 'email_principal', 'contatos_disponiveis', 'status_contato', 'proxima_acao', 'hipotese_comercial', 'tipo_unidade', 'qualidade_cadastral', 'benchmark', 'cnae', 'capital', 'uf', 'cidade'];
+            function hdr(a) {
+                const s = new Set();
+                for (const r of a)
+                    for (const k in r)
+                        s.add(k);
+                return [...PREF.filter(k => s.has(k)), ...[...s].filter(k => !PREF.includes(k))];
+            }
+            function enriquece(r) {
+                const f1 = fone(r.ddd, r.telefone)
+                  , f2 = fone(r.ddd, r.telefone2);
+                r.telefone_formatado = foneFmt(f1);
+                r.tipo_telefone = foneTipo(f1);
+                r.telefone2_formatado = foneFmt(f2);
+                r.email_principal = mailOk(r.email) ? String(r.email).trim().toLowerCase() : mailOk(r.email2) ? String(r.email2).trim().toLowerCase() : '';
+                r.contato_nome = String(r.contato ?? '').trim();
+                r.contatos_disponiveis = [r.telefone_formatado && (r.tipo_telefone || 'Telefone'), r.telefone2_formatado && 'Telefone 2', r.email_principal && 'E-mail', r.contato_nome && 'Nome de contato'].filter(Boolean).join(' + ') || 'Nenhum';
+                r.status_contato = 'Não confirmado (origem: arquivo)';
+                let c = dig(r.cnpj);
+                if (c.length >= 9 && c.length < 14)
+                    c = c.padStart(14, '0');
+                const d = dig(r.cnae).slice(0, 2)
+                  , tel = !!r.telefone_formatado
+                  , em = !!r.email_principal;
+                r.tipo_unidade = c.length === 14 ? (c.slice(8, 12) === '0001' ? 'Matriz' : 'Filial') : 'CNPJ inválido';
+                r.qualidade_cadastral = (c.length === 14 && tel && em) ? 'Completo' : (c.length === 14 && (tel || em)) ? 'Parcial' : 'Mínimo';
+                r.hipotese_comercial = hip(d);
+                r.proxima_acao = !(tel || em) ? 'Enriquecer contato antes da abordagem' : r.prioridade === 'A' ? 'BDR contatar em até 48h e qualificar volume de pallets e SKUs' : r.prioridade === 'B' ? 'Incluir em cadência de prospecção' : 'Manter na base e revisar com novo sinal';
+                r.benchmark = isBench(r) ? 'Concorrente/Parceiro BSA' : '';
+                return r;
+            }
+            const pc = v => {
+                if (typeof v === 'number')
+                    return v;
+                let x = String(v ?? '').replace(/[^0-9.,]/g, '');
+                if (/^[0-9]{1,3}(\.[0-9]{3})*(,[0-9]+)?$|^[0-9]+,[0-9]+$/.test(x))
+                    x = x.replace(/\./g, '').replace(',', '.');
+                else
+                    x = x.replace(/,/g, '');
+                return parseFloat(x) || 0
+            }
+            ;
+            const fmt = n => Number(n).toLocaleString('pt-BR');
+            function tabela(tit, col1, m) {
+                return `<h2 style="margin-top:12px">${tit}</h2><div class="tw" style="max-height:240px"><table><thead><tr><th>${col1}</th><th>Leads</th><th>Prioridade A</th><th>Score médio</th><th>Capital social médio (R$)</th></tr></thead><tbody>` + Object.entries(m).sort( (a, b) => b[1].a - a[1].a || b[1].n - a[1].n).slice(0, 15).map( ([k,g]) => `<tr><td>${esc(k)}</td><td>${fmt(g.n)}</td><td>${fmt(g.a)}</td><td>${Math.round(g.s / g.n)}</td><td>${fmt(Math.round(g.cap / g.n))}</td></tr>`).join('') + '</tbody></table></div>';
+            }
+            function rankings() {
+                const d = cur();
+                if (!d.length) {
+                    $('ia').innerHTML = '<small>Sem leads na visão atual. Faça uma busca ou veja o acumulado.</small>';
+                    return;
+                }
+                const g = f => {
+                    const m = {};
+                    d.forEach(r => {
+                        const k = f(r);
+                        const x = m[k] = m[k] || {
+                            n: 0,
+                            a: 0,
+                            s: 0,
+                            cap: 0
+                        };
+                        x.n++;
+                        x.a += r.prioridade === 'A' ? 1 : 0;
+                        x.s += r.score || 0;
+                        x.cap += pc(r.capital)
+                    }
+                    );
+                    return m;
+                }
+                ;
+                const seg = g(r => segNome(dig(r.cnae).slice(0, 2)))
+                  , ufs = g(r => String(r.uf || '?').toUpperCase());
+                const top = m => Object.entries(m).sort( (a, b) => b[1].a - a[1].a || b[1].n - a[1].n)[0];
+                const [ts,tsg] = top(seg)
+                  , [tu,tug] = top(ufs);
+                const dc = Object.keys(SEG).find(k => SEG[k][0] === ts);
+                $('ia').innerHTML = `<div style="font-size:13px;line-height:1.5"><b>Fatos (calculados dos dados na visão atual):</b> ${fmt(d.length)} leads; segmento com mais prioridade A: <b>${esc(ts)}</b> (${fmt(tsg.a)} de ${fmt(tsg.n)}); UF com mais prioridade A: <b>${esc(tu)}</b> (${fmt(tug.a)} de ${fmt(tug.n)}).<br>
+  <b>Hipótese (não é fato):</b> ${esc(dc ? SEG[dc][1] : 'sem hipótese definida para este segmento.')}<br>
+  <b>Recomendação:</b> abordar primeiro ${esc(tu)} em ${esc(ts)}, começando pelos leads de prioridade A com contato; validar volume de pallets e SKUs na primeira conversa.<br>
+  <span style="color:var(--mut)">Limites: capital social não é faturamento nem capacidade de investimento; CNPJ ativo não prova operação; o score é heurístico, não probabilidade de conversão.</span></div>` + tabela('Ranking de segmentos (CNAE, 2 dígitos)', 'Segmento', seg) + tabela('Ranking de UFs', 'UF', ufs);
+            }
+            async function diag() {
+                if (!conn || !cols.length) {
+                    $('ia').innerHTML = '<small>Carregue a base primeiro.</small>';
+                    return;
+                }
+                const m = {};
+                for (const k in ALIAS)
+                    m[k] = ($('m_' + k) || {}).value || '';
+                const c = k => m[k] ? q(m[k]) : "''";
+                const mail = "'^[^@ ]+@[^@ ]+[.][^@ ]+$'";
+                const sql = `WITH t AS (SELECT regexp_replace(coalesce(${c('cnpj')},''),'[^0-9]','','g') cn, coalesce(trim(${c('email')}),'') em, regexp_replace(coalesce(${c('telefone')},''),'[^0-9]','','g') tl, upper(coalesce(${c('situacao')},'')) sit, coalesce(trim(${c('capital')}),'') cp, upper(trim(${c('uf')})) uf FROM base)
+  SELECT count(*) total, sum(CASE WHEN length(cn)=14 THEN 1 ELSE 0 END) cnpj_ok, count(NULLIF(cn,''))-count(DISTINCT NULLIF(cn,'')) dup,
+   sum(CASE WHEN sit LIKE '%ATIV%' OR sit IN ('02','2') THEN 1 ELSE 0 END) ativas, sum(CASE WHEN length(tl)>=10 THEN 1 ELSE 0 END) tel_ok,
+   sum(CASE WHEN regexp_matches(em,${mail}) THEN 1 ELSE 0 END) mail_ok, sum(CASE WHEN em<>'' AND NOT regexp_matches(em,${mail}) THEN 1 ELSE 0 END) mail_inv,
+   sum(CASE WHEN cp IN ('','0','0,00','0.00') THEN 1 ELSE 0 END) cap_zero, sum(CASE WHEN substr(cn,9,4)='0001' THEN 1 ELSE 0 END) matriz, count(DISTINCT NULLIF(uf,'')) ufs FROM t`;
+                $('ia').innerHTML = '<small>Rodando diagnóstico (uma leitura completa da base)...</small>';
+                try {
+                    const r = (await conn.query(sql)).toArray()[0]
+                      , T = num(r.total) || 1
+                      , v = k => num(r[k]);
+                    const L = [['Registros na base', v('total'), 'count(*)'], ['CNPJ com 14 dígitos', v('cnpj_ok'), 'CNPJ normalizado (só números) com 14 dígitos'], ['CNPJ duplicado (excedente)', v('dup'), 'registros com CNPJ repetido, não removidos'], ['Situação ativa', v('ativas'), "situação contém 'ATIV' ou código 02"], ['Telefone válido', v('tel_ok'), '10 ou mais dígitos'], ['E-mail válido', v('mail_ok'), 'formato nome@dominio.ext (não prova que existe)'], ['E-mail inválido', v('mail_inv'), 'preenchido fora do formato'], ['Capital social vazio ou zero', v('cap_zero'), 'vazio, 0 ou 0,00'], ['Matrizes', v('matriz'), "dígitos 9 a 12 do CNPJ iguais a 0001"]];
+                    $('ia').innerHTML = `<h2>Diagnóstico da base (Dados e BI)</h2><div class="tw" style="max-height:300px"><table><thead><tr><th>Indicador</th><th>Valor</th><th>% da base</th><th>Regra de cálculo</th></tr></thead><tbody>` + L.map( ([a,b,c]) => `<tr><td>${a}</td><td>${fmt(b)}</td><td>${(b / T * 100).toFixed(1)}%</td><td>${esc(c)}</td></tr>`).join('') + `</tbody></table></div><small>UFs distintas: ${v('ufs')}. Nenhum registro é excluído: os problemas são sinalizados nas colunas qualidade_cadastral e tipo_unidade dos resultados.</small>`;
+                } catch (e) {
+                    $('ia').innerHTML = '<small>Erro no diagnóstico: ' + esc(e.message) + '</small>';
+                }
+            }
+            async function carregaBench() {
+                const b = await kvGet('bench');
+                if (b)
+                    bench = new Set(b);
+            }
+            carregaBench();
+            function statsAcum() {
+                $('aT').textContent = acum.length.toLocaleString('pt-BR');
+                const por = {};
+                acum.forEach(r => {
+                    const u = String(r.uf || '?').toUpperCase();
+                    por[u] = (por[u] || 0) + 1
+                }
+                );
+                $('aU').textContent = Object.keys(por).length;
+                $('aA').textContent = acum.filter(r => r.prioridade === 'A').length.toLocaleString('pt-BR');
+                $('aUF').textContent = Object.entries(por).sort( (a, b) => b[1] - a[1]).map( ([u,n]) => u + ': ' + n.toLocaleString('pt-BR')).join('  |  ') || 'Nenhum estado ainda.';
+            }
+            async function addAcum(novos, rotulo) {
+                const mapa = new Map(acum.map(r => [chave(r), r]));
+                let novo = 0
+                  , atual = 0;
+                for (const r of novos) {
+                    if (!r.proxima_acao)
+                        enriquece(r);
+                    const k = chave(r);
+                    const o = mapa.get(k);
+                    if (!o) {
+                        mapa.set(k, {
+                            ...r,
+                            origem: r.origem || rotulo || '',
+                            extraido_em: r.extraido_em || new Date().toISOString().slice(0, 10)
+                        });
+                        novo++
+                    } else if ((r.score || 0) > (o.score || 0)) {
+                        mapa.set(k, {
+                            ...o,
+                            ...r,
+                            origem: o.origem,
+                            extraido_em: o.extraido_em
+                        });
+                        atual++
+                    }
+                }
+                acum = [...mapa.values()].sort( (a, b) => (b.score || 0) - (a.score || 0));
+                await kvSet('acum', acum);
+                statsAcum();
+                if (view === 'acum')
+                    render();
+                return {
+                    novo,
+                    atual
+                };
+            }
+            (async () => {
+                acum = (await kvGet('acum')) || [];
+                statsAcum();
+            }
+            )();
+
+            const MSG_CDN = 'Não consegui baixar o motor de consulta (DuckDB) de cdn.jsdelivr.net. Verifique a internet ou se a rede da empresa bloqueia o site, e recarregue com Ctrl+F5. Detalhe: ';
+            async function init() {
+                st('Baixando o motor de consulta (primeira vez leva alguns segundos)...');
+                duckdb = await import('https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm');
+                const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
+                const url = URL.createObjectURL(new Blob([`importScripts("${bundle.mainWorker}");`],{
+                    type: 'text/javascript'
+                }));
+                db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING),new Worker(url));
+                await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+                conn = await db.connect();
+                st('Motor pronto. Selecione o arquivo.');
+            }
+            let ready = null;
+            const start = () => ready || (ready = init().catch(e => {
+                ready = null;
+                st(MSG_CDN + (e.message || e));
+                throw e;
+            }
+            ));
+            start().catch( () => {}
+            );
+
+            /* ===== Leitura universal de arquivos ===== */
+            const fmt0 = n => Number(n).toLocaleString('pt-BR');
+            const EXT_XLS = /\.(xlsx|xlsm|xlsb|xls|ods|fods|html?|xml)$/i
+              , EXT_JSON = /\.(json|jsonl|ndjson)(\.gz)?$/i
+              , EXT_PQ = /\.parquet$/i;
+            async function sniff(f) {
+                const b = new Uint8Array(await f.slice(0, 262144).arrayBuffer());
+                const h = (...x) => x.every( (v, i) => b[i] === v);
+                if (h(0x50, 0x4B))
+                    return {
+                        tipo: 'xls',
+                        fmt: 'Excel/ZIP'
+                    };
+                if (h(0xD0, 0xCF, 0x11, 0xE0))
+                    return {
+                        tipo: 'xls',
+                        fmt: 'Excel antigo (.xls)'
+                    };
+                if (h(0x50, 0x41, 0x52, 0x31))
+                    return {
+                        tipo: 'parquet',
+                        fmt: 'Parquet'
+                    };
+                if (h(0x1F, 0x8B))
+                    return {
+                        tipo: 'gz',
+                        fmt: 'compactado .gz'
+                    };
+                let enc = 'utf-8';
+                if (h(0xFF, 0xFE) || h(0xFE, 0xFF))
+                    enc = 'utf-16';
+                else {
+                    try {
+                        new TextDecoder('utf-8',{
+                            fatal: true
+                        }).decode(b, {
+                            stream: true
+                        });
+                    } catch (_) {
+                        enc = 'latin-1';
+                    }
+                }
+                const t = new TextDecoder(enc === 'utf-16' ? 'utf-16le' : enc === 'latin-1' ? 'windows-1252' : 'utf-8').decode(b.slice(0, 2000)).trimStart();
+                if (t[0] === '{' || t[0] === '[')
+                    return {
+                        tipo: 'json',
+                        fmt: 'JSON',
+                        enc
+                    };
+                return {
+                    tipo: 'texto',
+                    fmt: 'texto delimitado (CSV, TSV, TXT)',
+                    enc
+                };
+            }
+            const celula = v => {
+                if (v == null)
+                    return '';
+                if (v instanceof Date)
+                    return isNaN(v) ? '' : v.toISOString().slice(0, 10);
+                if (typeof v === 'number')
+                    return Number.isInteger(v) ? v.toLocaleString('fullwide', {
+                        useGrouping: false
+                    }) : String(v);
+                return String(v);
+            }
+            ;
+            const csvEsc = v => /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+            async function lerPlanilha(f) {
+                if (typeof XLSX === 'undefined')
+                    throw new Error('a biblioteca de Excel não carregou (cdnjs bloqueado?); use CSV');
+                const wb = XLSX.read(await f.arrayBuffer(), {
+                    type: 'array',
+                    cellDates: true
+                });
+                const folhas = [];
+                for (const nome of wb.SheetNames) {
+                    const rs = XLSX.utils.sheet_to_json(wb.Sheets[nome], {
+                        header: 1,
+                        raw: true,
+                        defval: '',
+                        blankrows: false
+                    });
+                    if (rs.length < 2)
+                        continue;
+                    const cnt = r => r.filter(x => String(x).trim() !== '').length
+                      , mx = Math.max(...rs.slice(0, 30).map(cnt));
+                    let hi = rs.findIndex( (r, i) => i < 30 && cnt(r) >= Math.max(2, Math.ceil(mx * 0.6)));
+                    if (hi < 0)
+                        hi = 0;
+                    const usados = {};
+                    const head = rs[hi].map( (h, i) => {
+                        let n = String(h).trim() || ('coluna_' + (i + 1));
+                        if (usados[n]) {
+                            usados[n]++;
+                            n += '_' + usados[n];
+                        } else
+                            usados[n] = 1;
+                        return n;
+                    }
+                    );
+                    folhas.push({
+                        nome,
+                        head,
+                        body: rs.slice(hi + 1).filter(r => cnt(r) > 0),
+                        sig: head.map(x => normN(x)).join('|')
+                    });
+                }
+                if (!folhas.length)
+                    throw new Error('nenhuma planilha com dados');
+                folhas.sort( (a, b) => b.body.length - a.body.length);
+                const base = folhas[0]
+                  , usadas = folhas.filter(x => x.sig === base.sig)
+                  , ign = folhas.filter(x => x.sig !== base.sig);
+                const linhas = [base.head.map(csvEsc).join(';')];
+                for (const fl of usadas)
+                    for (const r of fl.body)
+                        linhas.push(base.head.map( (_, i) => csvEsc(celula(r[i]))).join(';'));
+                return {
+                    csv: linhas.join('\n'),
+                    n: linhas.length - 1,
+                    info: `Planilha(s) lida(s): ${usadas.map(x => x.nome).join(', ')}.` + (ign.length ? ` Ignoradas (estrutura diferente): ${ign.map(x => x.nome).join(', ')}.` : '')
+                };
+            }
+
+            $('bCarregar').onclick = async () => {
+                const f = $('arq').files[0];
+                if (!f)
+                    return st('Selecione um arquivo primeiro.');
+                $('bCarregar').disabled = true;
+                try {
+                    await start();
+                } catch (_) {
+                    $('bCarregar').disabled = false;
+                    return;
+                }
+                const mb = f.size / 1048576
+                  , nome = f.name.toLowerCase();
+                st(`Abrindo ${f.name} (${mb.toFixed(0)} MB)...`);
+                try {
+                    try {
+                        await conn.query('DROP VIEW IF EXISTS base');
+                    } catch (_) {}
+                    for (const n of ['base.dat', 'base.csv.gz', 'base.json.gz'])
+                        try {
+                            await db.dropFile(n);
+                        } catch (_) {}
+                    let sn = await sniff(f)
+                      , tipo = sn.tipo;
+                    if (EXT_XLS.test(nome))
+                        tipo = 'xls';
+                    else if (EXT_PQ.test(nome))
+                        tipo = 'parquet';
+                    else if (EXT_JSON.test(nome))
+                        tipo = 'json';
+                    else if (tipo === 'gz')
+                        tipo = /json/.test(nome) ? 'json' : 'texto';
+                    const gz = /\.gz$/.test(nome) || sn.tipo === 'gz';
+                    let src, fmt = sn.fmt;
+                    if (tipo === 'xls') {
+                        fmt = 'planilha (Excel, ODS ou similar)';
+                        if (mb > 250) {
+                            st(`A planilha tem ${mb.toFixed(0)} MB e o navegador não consegue abrir. Salve como CSV (Arquivo > Salvar como > CSV UTF-8) ou filtre antes. Se tiver mais de 1 milhão de linhas, o Excel já truncou: use o CSV/TXT original.`);
+                            $('bCarregar').disabled = false;
+                            return;
+                        }
+                        st(`Lendo planilha (${mb.toFixed(0)} MB)... aguarde.`);
+                        await new Promise(r => setTimeout(r, 50));
+                        const r = await lerPlanilha(f);
+                        fmt += ` | ${fmt0(r.n)} linhas. ${r.info}`;
+                        await db.registerFileText('base.dat', r.csv);
+                        src = `read_csv('base.dat',delim=';',quote='"',all_varchar=true,ignore_errors=true,sample_size=20000,header=true,null_padding=true)`;
+                    } else if (tipo === 'parquet') {
+                        await db.registerFileHandle('base.dat', f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
+                        src = `(SELECT COLUMNS(*)::VARCHAR FROM read_parquet('base.dat'))`;
+                    } else if (tipo === 'json') {
+                        const fn = gz ? 'base.json.gz' : 'base.dat';
+                        await db.registerFileHandle(fn, f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
+                        src = `(SELECT COLUMNS(*)::VARCHAR FROM read_json_auto('${fn}',ignore_errors=true))`;
+                    } else {
+                        const fn = gz ? 'base.csv.gz' : 'base.dat';
+                        await db.registerFileHandle(fn, f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
+                        const enc = sn.enc && sn.enc !== 'utf-8' ? `,encoding='${sn.enc}'` : '';
+                        if (sn.enc)
+                            fmt += ` (codificação ${sn.enc})`;
+                        src = `read_csv('${fn}',all_varchar=true,ignore_errors=true,sample_size=20000,auto_detect=true,null_padding=true${enc})`;
+                    }
+                    await conn.query(`CREATE VIEW base AS SELECT * FROM ${src}`);
+                    cols = (await conn.query('DESCRIBE base')).toArray().map(r => r.column_name);
+                    if (!cols.length)
+                        throw new Error('nenhuma coluna encontrada');
+                    mp = {};
+                    for (const k in ALIAS)
+                        mp[k] = detect(k);
+                    $('map').innerHTML = Object.keys(ALIAS).map(k => `<div><label>${k}</label><select id="m_${k}"><option value="">—</option>${cols.map(c => `<option ${c === mp[k] ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>`).join('');
+                    $('cMap').hidden = false;
+                    $('cFil').hidden = false;
+                    st(`Base carregada: ${cols.length} colunas. Formato lido: ${fmt}.`);
+                    if (mb < 300)
+                        await diag();
+                    else
+                        $('ia').innerHTML = '<small>Base grande: clique em Diagnóstico da base quando quiser (faz uma leitura completa).</small>';
+                } catch (e) {
+                    st('Erro ao abrir: ' + (e.message || e) + '. Dica: se persistir, salve como CSV UTF-8 e tente de novo.')
+                }
+                $('bCarregar').disabled = false;
+            }
+            ;
+
+            const solucao = c => {
+                const d = String(c || '').slice(0, 2);
+                if (['10', '11', '46'].includes(d))
+                    return 'Push Back (PSH) / Dinâmico (DIN)';
+                if (d === '52')
+                    return 'Porta-Pallet / Drive-In / Shuttle';
+                if (+d >= IND[0] && +d <= IND[1])
+                    return 'Porta-Pallet / Mezanino / Cantilever';
+                return 'Porta-Pallet';
+            }
+            ;
+
+            $('bBuscar').onclick = async () => {
+                const m = {};
+                for (const k in ALIAS)
+                    m[k] = $('m_' + k).value;
+                const col = (k, d="''") => m[k] ? q(m[k]) : d;
+                const capRaw = col('capital', "'0'");
+                const cx = `regexp_replace(coalesce(${capRaw},''),'[^0-9.,]','','g')`;
+                const cap = `CASE WHEN regexp_matches(${cx},'^[0-9]{1,3}([.][0-9]{3})*(,[0-9]+)?$') OR regexp_matches(${cx},'^[0-9]+,[0-9]+$') THEN TRY_CAST(replace(replace(${cx},'.',''),',','.') AS DOUBLE) ELSE TRY_CAST(replace(${cx},',','') AS DOUBLE) END`;
+                const cnae = `regexp_replace(coalesce(${col('cnae')},''),'[^0-9]','','g')`;
+                const uf = `upper(trim(${col('uf')}))`;
+                const tel = `coalesce(trim(${col('telefone')}),'')`
+                  , mail = `coalesce(trim(${col('email')}),'')`
+                  , site = `coalesce(trim(${col('site')}),'')`;
+                const sC = 'CASE ' + PTS_CNAE.map( ([p,v]) => `WHEN left(cnae_n,2)='${p}' THEN ${v}`).join(' ') + ` WHEN TRY_CAST(left(cnae_n,2) AS INT) BETWEEN ${IND[0]} AND ${IND[1]} THEN 25 ELSE 0 END`;
+                const sK = 'CASE ' + PTS_CAP.map( ([v,p]) => `WHEN capital_n>=${v} THEN ${p}`).join(' ') + ' ELSE 0 END';
+                const ufl = UF_PRIORITARIAS.map(u => `'${u}'`).join(',');
+                const w = [];
+                const ufs = $('fUF').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+                if (ufs.length && m.uf)
+                    w.push(`uf_n IN (${ufs.map(u => `'${lit(u)}'`).join(',')})`);
+                if ($('fAtiv').checked && m.situacao)
+                    w.push(`(upper(${q(m.situacao)}) LIKE '%ATIV%' OR trim(${q(m.situacao)}) IN ('02','2'))`);
+                const pref = $('fCNAE').value.split(',').map(s => s.trim()).filter(s => /^\d+$/.test(s));
+                if (pref.length && m.cnae)
+                    w.push('(' + pref.map(x => `cnae_n LIKE '${x}%'`).join(' OR ') + ')');
+                const cm = +$('fCap').value;
+                if (cm && m.capital)
+                    w.push(`capital_n>=${cm}`);
+                if ($('fCid').value.trim() && m.cidade)
+                    w.push(`upper(${q(m.cidade)}) LIKE '%${lit($('fCid').value.trim().toUpperCase())}%'`);
+                if ($('fCont').checked)
+                    w.push("(tel_n<>'' OR mail_n<>'')");
+                const where = w.length ? 'WHERE ' + w.join(' AND ') : '';
+                const keys = ['cnpj', 'razao', 'fantasia', 'cnae', 'capital', 'uf', 'cidade', 'telefone', 'ddd', 'telefone2', 'email', 'email2', 'contato', 'site'].filter(k => m[k]);
+                const rb = cols.find(c => /basico|básico/i.test(c))
+                  , ro = cols.find(c => /ordem/i.test(c))
+                  , rd = cols.find(c => /(^|_)dv$|digito|dígito/i.test(c));
+                const cnpjExpr = (rb && ro && rd && /basico|básico/i.test(m.cnpj || '')) ? `(lpad(trim(${q(rb)}),8,'0')||lpad(trim(${q(ro)}),4,'0')||lpad(trim(${q(rd)}),2,'0'))` : null;
+                const usados = new Set(Object.values(m).filter(Boolean));
+                const extraSql = $('fAll').checked ? cols.filter(c => !usados.has(c)).map(c => `, ${q(c)} AS ${q('arq_' + c)}`).join('') : '';
+                const sel = keys.map(k => `${k === 'cnpj' && cnpjExpr ? cnpjExpr : q(m[k])} AS ${k}`).join(', ');
+                const n = Math.max(1, +$('fN').value || 2000);
+                const sql = `WITH t AS (SELECT *, ${cnae} cnae_n, ${cap} capital_n, ${uf} uf_n, ${tel} tel_n, ${mail} mail_n, ${site} site_n FROM base),
+  s AS (SELECT ${sel}, cnae_n,
+   (${sC})+(${sK})+CASE WHEN uf_n IN (${ufl}) THEN 15 ELSE 0 END+CASE WHEN tel_n<>'' THEN 5 ELSE 0 END+CASE WHEN mail_n<>'' THEN 5 ELSE 0 END+CASE WHEN site_n<>'' THEN 5 ELSE 0 END AS score${extraSql}
+   FROM t ${where})`;
+                $('bBuscar').disabled = true;
+                st('Consultando a base (pode levar alguns minutos em arquivos grandes)...');
+                try {
+                    const res = await conn.query(`${sql} SELECT * FROM s ORDER BY score DESC LIMIT ${n}`);
+                    rows = res.toArray().map(r => {
+                        const o = {};
+                        for (const k of res.schema.fields.map(f => f.name)) {
+                            const v = r[k];
+                            o[k] = typeof v === 'bigint' ? Number(v) : v;
+                        }
+                        o.prioridade = o.score >= 65 ? 'A' : o.score >= 40 ? 'B' : 'C';
+                        o.solucao_sugerida = solucao(o.cnae_n);
+                        enriquece(o);
+                        delete o.cnae_n;
+                        return o;
+                    }
+                    );
+                    if ($('fBench').checked)
+                        rows = rows.filter(r => !r.benchmark);
+                    pg = 0;
+                    $('kT').textContent = '…';
+                    $('kE').textContent = rows.length.toLocaleString('pt-BR');
+                    $('kA').textContent = rows.filter(r => r.prioridade === 'A').length.toLocaleString('pt-BR');
+                    view = 'busca';
+                    $('bAdd').disabled = !rows.length;
+                    render();
+                    let msg = 'Consulta concluída.';
+                    if ($('auto').checked && rows.length) {
+                        const r = await addAcum(rows, $('rot').value.trim());
+                        msg += ` Acumulado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`
+                    }
+                    st(msg);
+                    conn.query(`${sql} SELECT count(*) c FROM s`).then(r => {
+                        $('kT').textContent = fmt0(num(r.toArray()[0].c));
+                    }
+                    ).catch( () => {
+                        $('kT').textContent = 'n/d';
+                    }
+                    );
+                    if (!rows.length)
+                        await dica(m);
+                } catch (e) {
+                    st('Erro na consulta: ' + e.message)
+                }
+                $('bBuscar').disabled = false;
+            }
+            ;
+
+            async function dica(m) {
+                try {
+                    const d = []
+                      , vals = async (sql) => (await conn.query(sql)).toArray().map(x => x.v).filter(Boolean);
+                    if (m.uf)
+                        d.push('UF na base: ' + (await vals(`SELECT DISTINCT upper(trim(${q(m.uf)})) v FROM base LIMIT 25`)).join(', '));
+                    if (m.situacao)
+                        d.push('situação: ' + (await vals(`SELECT DISTINCT trim(${q(m.situacao)}) v FROM base LIMIT 10`)).join(', '));
+                    if (m.cnae)
+                        d.push('divisões CNAE: ' + (await vals(`SELECT DISTINCT left(regexp_replace(coalesce(${q(m.cnae)},''),'[^0-9]','','g'),2) v FROM base LIMIT 25`)).join(', '));
+                    st('Nenhum lead com esses filtros. Valores existentes na base (' + d.join(' | ') + '). Ajuste UF, CNAE ou capital, ou desmarque "somente ativas".');
+                } catch (_) {}
+            }
+            function render() {
+                const rows = cur();
+                $('vt').textContent = view === 'acum' ? 'Acumulado de todos os estados (' + rows.length.toLocaleString('pt-BR') + ' leads)' : 'Resultado da busca';
+                $('bView').textContent = view === 'acum' ? 'Ver resultado da busca' : 'Ver acumulado';
+                $('bX').disabled = $('bC').disabled = !rows.length;
+                const pgs = Math.max(1, Math.ceil(rows.length / PS));
+                if (pg >= pgs)
+                    pg = pgs - 1;
+                $('pI').textContent = `Página ${pg + 1} de ${pgs} (${PS} linhas por página)`;
+                if (!rows.length) {
+                    $('tb').innerHTML = '<tbody><tr><td>Nenhum lead com esses filtros.</td></tr></tbody>';
+                    return;
+                }
+                const h = hdr(rows);
+                $('tb').innerHTML = '<thead><tr>' + h.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>' + rows.slice(pg * PS, (pg + 1) * PS).map(r => '<tr>' + h.map(x => `<td class="${x === 'prioridade' ? r[x] : ''}">${esc(r[x])}</td>`).join('') + '</tr>').join('') + '</tbody>';
+            }
+            $('bView').onclick = () => {
+                view = view === 'acum' ? 'busca' : 'acum';
+                pg = 0;
+                render();
+            }
+            ;
+            $('pP').onclick = () => {
+                if (pg > 0) {
+                    pg--;
+                    render();
+                }
+            }
+            ;
+            $('pN').onclick = () => {
+                pg++;
+                render();
+            }
+            ;
+            $('bDiag').onclick = diag;
+            $('bRank').onclick = rankings;
+            $('bBench').onclick = () => $('bIn').click();
+            $('bIn').onchange = async e => {
+                const f = e.target.files[0];
+                if (!f)
+                    return;
+                try {
+                    if (typeof XLSX === 'undefined') {
+                        st('A biblioteca de Excel não carregou. Use CSV ou recarregue com Ctrl+F5.');
+                        return;
+                    }
+                    const wb = XLSX.read(await f.arrayBuffer(), {
+                        type: 'array'
+                    });
+                    const j = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+                        defval: ''
+                    });
+                    if (!j.length)
+                        throw new Error('arquivo vazio');
+                    const ks = Object.keys(j[0]);
+                    const kc = ks.find(k => /cnpj/i.test(k))
+                      , kr = ks.find(k => /raz|empresa|nome/i.test(k));
+                    if (!kc && !kr)
+                        throw new Error('não achei coluna de CNPJ ou razão social');
+                    j.forEach(x => {
+                        if (kc && dig(x[kc]).length >= 8)
+                            bench.add('c' + dig(x[kc]).slice(0, 8));
+                        if (kr && normN(x[kr]))
+                            bench.add('n' + normN(x[kr]));
+                    }
+                    );
+                    await kvSet('bench', [...bench]);
+                    [acum, rows].forEach(a => a.forEach(r => r.benchmark = isBench(r) ? 'Concorrente/Parceiro BSA' : ''));
+                    await kvSet('acum', acum);
+                    render();
+                    st(`Benchmark importado: ${fmt(j.length)} empresas. Leads que casam por CNPJ (8 primeiros dígitos) ou razão social ficam marcados.`);
+                } catch (err) {
+                    st('Erro ao importar benchmark: ' + err.message)
+                }
+                e.target.value = '';
+            }
+            ;
+            $('bAdd').onclick = async () => {
+                if (!rows.length)
+                    return;
+                const r = await addAcum(rows, $('rot').value.trim());
+                st(`Acumulado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`)
+            }
+            ;
+            $('bLimpa').onclick = async () => {
+                if (confirm('Apagar todo o acumulado? Baixe um backup antes.')) {
+                    acum = [];
+                    await kvSet('acum', acum);
+                    statsAcum();
+                    render();
+                }
+            }
+            ;
+            $('bImp').onclick = () => $('aImp').click();
+            $('aImp').onchange = async e => {
+                const f = e.target.files[0];
+                if (!f)
+                    return;
+                try {
+                    if (typeof XLSX === 'undefined') {
+                        st('A biblioteca de Excel não carregou. Use CSV ou recarregue com Ctrl+F5.');
+                        return;
+                    }
+                    const wb = XLSX.read(await f.arrayBuffer(), {
+                        type: 'array'
+                    });
+                    const j = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+                        defval: ''
+                    });
+                    const r = await addAcum(j.map(x => ({
+                        ...x,
+                        score: Number(x.score) || 0
+                    })), '');
+                    st(`Importado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`)
+                } catch (err) {
+                    st('Erro ao importar: ' + err.message)
+                }
+                e.target.value = '';
+            }
+            ;
+            function baixar(blob, nome) {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = nome;
+                a.click();
+            }
+            $('bC').onclick = () => {
+                const rows = cur();
+                const h = hdr(rows);
+                const cel = v => {
+                    v = String(v ?? '');
+                    if (/^[=+\-@\t\r]/.test(v) && !/^[+-]?\d+([.,]\d+)?$/.test(v))
+                        v = "'" + v;
+                    return '"' + v.replace(/"/g, '""') + '"';
+                }
+                ;
+                const l = [h.join(';'), ...rows.map(r => h.map(k => cel(r[k])).join(';'))];
+                baixar(new Blob(['\ufeff' + l.join('\n')],{
+                    type: 'text/csv;charset=utf-8'
+                }), (view === 'acum' ? 'acumulado_' : 'busca_') + 'leads_prospect_bsa.csv');
+            }
+            ;
+            $('bX').onclick = () => {
+                const rows = cur();
+                if (typeof XLSX === 'undefined')
+                    return st('A biblioteca de Excel não carregou. Use Baixar CSV ou recarregue com Ctrl+F5.');
+                if (rows.length > 1000000)
+                    return st('Mais de 1 milhão de linhas: use Baixar CSV (limite do Excel).');
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows, {
+                    header: hdr(rows)
+                }), 'Leads');
+                XLSX.writeFile(wb, (view === 'acum' ? 'acumulado_' : 'busca_') + 'leads_prospect_bsa.xlsx');
+            }
+            ;
+            $('arq').onchange = () => {
+                if ($('arq').files[0])
+                    $('bCarregar').click();
+            }
+            ;
+            addEventListener('dragover', e => e.preventDefault());
+            addEventListener('drop', e => {
+                e.preventDefault();
+                const fl = e.dataTransfer && e.dataTransfer.files;
+                if (fl && fl.length) {
+                    $('arq').files = fl;
+                    $('bCarregar').click();
+                }
+            }
+            );
+        </script>
+    </body>
 </html>
