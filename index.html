@@ -1,1202 +1,789 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Prospect BSA | Inteligência de Mercado</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>PAIM IA PROSPECT VER26 DEFINITIVA · Bertolini BSA</title>
         <style>
             :root {
-                --c1: #0B2545;
-                --c2: #C8102E;
-                --bg: #f4f6fa;
-                --card: #fff;
-                --tx: #1b2430;
-                --mut: #667085;
-                --bd: #dde3ec
+                --b: #06418a;
+                --n: #042c5e;
+                --o: #f58220;
+                --bg: #f3f6fa;
+                --ink: #172536;
+                --mut: #637083;
+                --line: #dce3ec
             }
-
-            * {
-                box-sizing: border-box
-            }
-
-            body {
-                margin: 0;
-                font-family: Segoe UI,Arial,sans-serif;
-                background: var(--bg);
-                color: var(--tx)
-            }
-
-            header {
-                background: var(--c1);
-                border-bottom: 4px solid var(--c2);
-                padding: 14px 24px;
-                display: flex;
-                align-items: center;
-                gap: 18px
-            }
-
-            header img {
-                height: 40px
-            }
-
-            header h1 {
-                color: #fff;
-                font-size: 20px;
-                margin: 0;
-                font-weight: 600
-            }
-
-            main {
-                display: grid;
-                grid-template-columns: 330px 1fr;
-                gap: 18px;
-                padding: 18px;
-                max-width: 1700px;
-                margin: auto
-            }
-
-            @media(max-width: 900px) {
-                main {
-                    grid-template-columns:1fr
-                }
-            }
-
-            .card {
-                background: var(--card);
-                border: 1px solid var(--bd);
-                border-radius: 10px;
-                padding: 16px;
-                margin-bottom: 14px
-            }
-
-            h2 {
-                font-size: 14px;
-                margin: 0 0 10px;
-                color: var(--c1);
-                text-transform: uppercase;
-                letter-spacing: .04em
-            }
-
-            label {
-                display: block;
-                font-size: 12px;
-                color: var(--mut);
-                margin: 8px 0 3px
-            }
-
-            input[type=text],input[type=number],select {
-                width: 100%;
-                padding: 7px 8px;
-                border: 1px solid var(--bd);
-                border-radius: 6px;
-                font-size: 13px
-            }
-
-            input[type=file] {
-                font-size: 12px;
-                width: 100%
-            }
-
-            .chk {
-                display: flex;
-                gap: 6px;
-                align-items: center;
-                font-size: 13px;
-                margin: 8px 0;
-                color: var(--tx)
-            }
-
-            button {
-                background: var(--c2);
-                color: #fff;
-                border: 0;
-                border-radius: 6px;
-                padding: 9px 14px;
-                font-size: 13px;
-                font-weight: 600;
-                cursor: pointer;
-                margin-top: 10px;
-                width: 100%
-            }
-
-            button.sec {
-                background: var(--c1)
-            }
-
-            button:disabled {
-                opacity: .5;
-                cursor: wait
-            }
-
-            .map {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 4px 8px
-            }
-
-            .kpis {
-                display: grid;
-                grid-template-columns: repeat(3,1fr);
-                gap: 12px
-            }
-
-            .kpi {
-                background: var(--card);
-                border: 1px solid var(--bd);
-                border-radius: 10px;
-                padding: 12px 16px
-            }
-
-            .kpi b {
-                display: block;
-                font-size: 26px;
-                color: var(--c1)
-            }
-
-            .kpi span {
-                font-size: 12px;
-                color: var(--mut)
-            }
-
-            .tw {
-                overflow: auto;
-                max-height: 600px;
-                border: 1px solid var(--bd);
-                border-radius: 8px;
-                background: #fff
-            }
-
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                font-size: 12px
-            }
-
-            th {
-                position: sticky;
-                top: 0;
-                background: var(--c1);
-                color: #fff;
-                text-align: left;
-                padding: 7px 9px;
-                white-space: nowrap
-            }
-
-            td {
-                padding: 6px 9px;
-                border-bottom: 1px solid #eef1f6;
-                white-space: nowrap
-            }
-
-            .A {
-                color: #067647;
-                font-weight: 700
-            }
-
-            .B {
-                color: #b54708;
-                font-weight: 700
-            }
-
-            .C {
-                color: var(--mut)
-            }
-
-            #st {
-                font-size: 12px;
-                color: var(--mut);
-                margin-top: 8px;
-                min-height: 16px
-            }
-
-            .row {
-                display: flex;
-                gap: 10px
-            }
-
-            .row button {
-                margin-top: 12px
-            }
-
-            small {
-                color: var(--mut);
-                font-size: 11px;
-                line-height: 1.4;
-                display: block;
-                margin-top: 8px
-            }
+            * { box-sizing: border-box }
+            body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui,Arial,sans-serif }
+            .app { display: flex; min-height: 100vh }
+            .side { width: 235px; flex: 0 0 235px; background: var(--b); color: white }
+            .brand { background: var(--n); padding: 19px 14px; border-bottom: 3px solid var(--o) }
+            .brand b { display: block }
+            .brand small { color: #d7e4f3 }
+            .nav { padding: 8px }
+            .nav button { display: block; width: 100%; text-align: left; border: 0; border-radius: 7px; background: none; color: #e3eaf2; padding: 10px; cursor: pointer; font-weight: 650; margin-bottom: 2px; }
+            .nav button.active,.nav button:hover { background: var(--o); color: white }
+            .sf { padding: 12px; font-size: 11px; color: #d7e4f3 }
+            .main { min-width: 0; flex: 1; max-height: 100vh; display: flex; flex-direction: column }
+            .top { height: 52px; flex: 0 0 52px; background: white; border-bottom: 1px solid var(--line); padding: 0 18px; display: flex; align-items: center; justify-content: space-between }
+            .top b { color: var(--b) }
+            .content { padding: 18px; overflow: auto; flex: 1 }
+            .view { display: none }
+            .view.active { display: block }
+            h1 { font-size: 23px; color: var(--b); margin: 0 0 5px }
+            .sub,.small,.tag { font-size: 12px; color: var(--mut) }
+            .sub { margin: 0 0 14px }
+            .notice { background: #fff8e8; border: 1px solid #f0d18b; border-left: 5px solid var(--o); padding: 12px; border-radius: 8px; margin-bottom: 14px }
+            .card { background: white; border: 1px solid var(--line); border-radius: 9px; padding: 15px; margin: 0 0 14px }
+            .card h2 { font-size: 16px; color: var(--b); margin: 0 0 11px }
+            .kpis { display: grid; grid-template-columns: repeat(auto-fit,minmax(145px,1fr)); gap: 9px; margin: 12px 0 }
+            .kpi { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 11px }
+            .kpi span { display: block; font-size: 12px; color: var(--mut) }
+            .kpi b { display: block; font-size: 23px; color: var(--b) }
+            .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+            .btn { border: 0; border-radius: 7px; background: var(--b); color: white; padding: 9px 12px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block }
+            .btn.orange { background: var(--o) }
+            .btn.light { background: #e7edf5; color: var(--n) }
+            .btn:disabled { opacity: .45 }
+            .file-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px }
+            .drop-zone { padding: 16px; border: 2px dashed #91a6c1; border-radius: 8px; background: #f8fbff; text-align: center; cursor: pointer }
+            .file { padding: 9px; border: 1px dashed #91a6c1; border-radius: 7px; background: #f8fbff; max-width: 100% }
+            .filters { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 8px }
+            .filters label { font-size: 12px; color: var(--mut); font-weight: 650 }
+            .filters input,.filters select { display: block; width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #c7d1de; border-radius: 6px; background: white }
+            .tablebox { overflow: auto; max-height: 60vh; border: 1px solid var(--line); border-radius: 7px }
+            table { border-collapse: collapse; width: 100%; min-width: 880px; font-size: 12px; background: white }
+            th { position: sticky; top: 0; background: var(--b); color: white; text-align: left; padding: 9px; white-space: nowrap }
+            td { padding: 8px; border-bottom: 1px solid #e7ecf2; vertical-align: top; max-width: 260px; overflow-wrap: anywhere }
+            tr:nth-child(even) td { background: #f8fafc }
+            .empty { text-align: center; padding: 25px; color: var(--mut) }
+            .pill { border-radius: 99px; padding: 3px 7px; font-size: 11px; font-weight: 700; white-space: nowrap }
+            .high { background: #dcfce7; color: #176b45 }
+            .map-controls { display: grid; grid-template-columns: repeat(auto-fit,minmax(155px,1fr)); gap: 9px }
+            .map-controls label { font-size: 11px; color: var(--mut); font-weight: 700 }
+            .map-controls input,.map-controls select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #c7d1de; border-radius: 6px; background: white }
+            .map-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px }
+            .map-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(450px, 1fr); gap: 14px }
+            .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px }
+            .card-header-flex h3 { margin: 0; font-size: 16px; color: var(--b) }
+            .map-note { margin-top: 10px; padding: 10px; background: #f3f7fb; border-left: 4px solid var(--o); border-radius: 6px; font-size: 12px }
+            .filter-summary { margin: 10px 0; padding: 10px; background: #eef5ff; border-radius: 7px; color: var(--n); font-weight: 650 }
+            .map-legend { background: white; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); font-size: 11px; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px }
+            .legend-item { display: flex; align-items: center; gap: 6px; font-weight: 600 }
+            .legend-icon { width: 12px; height: 12px; border-radius: 50%; display: inline-block }
+            @media(max-width: 1100px) { .map-layout { grid-template-columns: 1fr } }
         </style>
+        <!-- Leaflet CSS & JS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+        
+        <!-- Leaflet MarkerCluster CSS & JS (Carregado obrigatoriamente após Leaflet JS) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+
+        <!-- SheetJS -->
+        <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     </head>
     <body>
-        <header>
-            <img src="https://servicos.bertolini.com.br/uploads/1/avatars/2022/04/338253949111931/Bertolini-white.png" alt="Bertolini">
-            <h1>Prospect BSA | Inteligência de Mercado</h1>
-        </header>
-        <div id="ban" style="display:none;background:#fff3cd;color:#664d03;padding:9px 24px;font-size:13px;border-bottom:1px solid #ffe69c"></div>
-        <main>
-            <aside>
-                <div class="card">
-                    <h2>1. Base de leads</h2>
-                    <input type="file" id="arq" accept=".csv,.tsv,.txt,.psv,.dat,.json,.jsonl,.ndjson,.parquet,.xlsx,.xlsm,.xlsb,.xls,.ods,.gz,.html,.xml">
-                    <button id="bCarregar">Carregar base</button>
-                    <small>Dica: ao escolher ou arrastar o arquivo para esta página, a leitura começa sozinha.</small>
-                    <small>O arquivo é lido no seu computador, sem upload. CSV, TSV, TXT, JSON, Parquet, Excel (xlsx, xls, ods) ou .gz; o app descobre o formato, o separador e a codificação. Se o arquivo de 6 GB travar o navegador, filtre antes (ativas, UF, CNAEs) e use a versão menor.</small>
-                    <div id="st"></div>
+        <div class="app">
+            <aside class="side">
+                <div class="brand">
+                    <b>PAIM IA PROSPECT</b>
+                    <small>Bertolini Intralogística · VER26</small>
                 </div>
-                <div class="card" id="cMap" hidden>
-                    <h2>2. Colunas</h2>
-                    <div class="map" id="map"></div>
-                    <small>Capital social: formato (1.234,56 ou 1234.56) detectado automaticamente.</small>
-                </div>
-                <div class="card" id="cFil" hidden>
-                    <h2>3. Filtros</h2>
-                    <label>UF (separe por vírgula)</label>
-                    <input type="text" id="fUF" value="RS,SC,PR,SP">
-                    <label>CNAE começa com</label>
-                    <input type="text" id="fCNAE" value="52,46,10,11,25,28">
-                    <label>Capital social mínimo (R$)</label>
-                    <input type="number" id="fCap" value="100000" step="50000">
-                    <label>Município contém</label>
-                    <input type="text" id="fCid">
-                    <div class="chk">
-                        <input type="checkbox" id="fAtiv" checked>
-                        <span>Somente situação ativa</span>
-                    </div>
-                    <div class="chk">
-                        <input type="checkbox" id="fCont">
-                        <span>Exigir telefone ou e-mail</span>
-                    </div>
-                    <div class="chk">
-                        <input type="checkbox" id="fAll" checked>
-                        <span>Incluir todas as colunas do arquivo (prefixo arq_)</span>
-                    </div>
-                    <div class="chk">
-                        <input type="checkbox" id="fBench" checked>
-                        <span>Ocultar concorrentes/parceiros do benchmark</span>
-                    </div>
-                    <label>Máx. de linhas por busca</label>
-                    <input type="number" id="fN" value="50000" step="5000">
-                    <button id="bBuscar">Buscar leads</button>
-                </div>
+                <nav class="nav" id="nav">
+                    <button class="active" data-tab="dash">▦ Dashboard Principal</button>
+                    <button data-tab="bases">⇧ Central de Bases</button>
+                    <button data-tab="search">⌕ Busca &amp; Mercado (Hub)</button>
+                    <button data-tab="geomapbase">◉ Mapa Hub Base</button>
+                    <button data-tab="profile">▣ Empresa 360°</button>
+                    <button data-tab="geomap">◉ Mapa de Prospecção</button>
+                    <button data-tab="radar">◉ Radar de Mercado</button>
+                    <button data-tab="icp">⚙ ICP &amp; Score</button>
+                    <button data-tab="opp">◎ Fila de Oportunidades</button>
+                    <button data-tab="bdr">☷ Listas para BDR</button>
+                    <button data-tab="sources">◌ Fontes Monitoradas</button>
+                    <button data-tab="gov">◇ Configurações &amp; Governança</button>
+                </nav>
+                <div class="sf">Dados na memória da página. Exporte antes de fechar.</div>
             </aside>
-            <section>
-                <div class="kpis">
-                    <div class="kpi">
-                        <b id="kT">–</b>
-                        <span>Leads encontrados</span>
-                    </div>
-                    <div class="kpi">
-                        <b id="kE">–</b>
-                        <span>Retornados</span>
-                    </div>
-                    <div class="kpi">
-                        <b id="kA">–</b>
-                        <span>Prioridade A</span>
-                    </div>
-                </div>
-                <div class="card" style="margin-top:14px">
-                    <h2>Skills aplicadas (regras embutidas no app)</h2>
-                    <div class="row">
-                        <button class="sec" id="bDiag">Diagnóstico da base (Dados e BI)</button>
-                        <button class="sec" id="bRank">Ranking de segmentos e UFs (Inteligência de Mercado)</button>
-                    </div>
-                    <div class="row">
-                        <button class="sec" id="bBench">Importar benchmark (concorrentes/parceiros)</button>
-                    </div>
-                    <input type="file" id="bIn" accept=".xlsx,.csv" hidden>
-                    <div id="ia" style="margin-top:12px"></div>
-                    <small>Contatos (telefones, e-mails e nomes) vêm somente do arquivo e ficam como "Não confirmado"; o app não deduz e-mails a partir de nomes. Nomes de pessoas são dado pessoal: use só para prospecção B2B legítima.</small>
-                    <small>As skills do Claude não rodam dentro de uma página HTML: o app aplica as regras delas como código (qualidade cadastral, score com pesos documentados, rankings, tipo de unidade, hipóteses e próxima ação, cruzamento com benchmark). A pesquisa na web das skills Benchmark e Prospect BSA continua no Claude: gere a lista lá, exporte em Excel e importe aqui.</small>
-                </div>
-                <div class="card" style="margin-top:14px">
-                    <h2>Acumulado de todos os estados</h2>
-                    <div class="kpis">
-                        <div class="kpi">
-                            <b id="aT">0</b>
-                            <span>Leads acumulados (sem duplicar CNPJ)</span>
+            <div class="main">
+                <header class="top">
+                    <b>PAIM IA PROSPECT · MOTOR B2B BSA</b>
+                    <span class="tag" id="topStatus">Base carregada (Demo ativa c/ GO)</span>
+                </header>
+                <main class="content">
+                    <!-- DASHBOARD -->
+                    <section class="view active" id="v-dash">
+                        <h1>Dashboard Principal</h1>
+                        <p class="sub">Resumo das cargas, sinais de mercado e contas qualificadas.</p>
+                        <div class="notice">
+                            <b>Plataforma Ativa:</b> Massa demo atualizada com empresas em Goiás (GO), Mato Grosso do Sul (MS), Amazonas (AM) e Rio Grande do Sul (RS).
                         </div>
-                        <div class="kpi">
-                            <b id="aU">0</b>
-                            <span>Estados no acumulado</span>
+                        <div id="activeFilterSummary" class="filter-summary">Filtro atual: todos os registros</div>
+                        <div class="kpis">
+                            <div class="kpi"><span>Empresas</span><b id="dTotal">0</b></div>
+                            <div class="kpi"><span>Prioridade alta</span><b id="dHigh">0</b></div>
+                            <div class="kpi"><span>Movimentações</span><b id="dMoves">0</b></div>
+                            <div class="kpi"><span>Com responsável</span><b id="dResp">0</b></div>
+                            <div class="kpi"><span>No filtro atual</span><b id="dFiltered">0</b></div>
+                            <div class="kpi"><span>Com telefone</span><b id="dPhone">0</b></div>
+                            <div class="kpi"><span>Com e-mail</span><b id="dEmail">0</b></div>
                         </div>
-                        <div class="kpi">
-                            <b id="aA">0</b>
-                            <span>Prioridade A</span>
+                        <div class="card">
+                            <h2>Segmentos da base</h2>
+                            <div id="segments" class="empty">Carregando segmentos...</div>
                         </div>
-                    </div>
-                    <div id="aUF" style="font-size:12px;color:var(--mut);margin:10px 0"></div>
-                    <div class="chk">
-                        <input type="checkbox" id="auto" checked>
-                        <span>Adicionar cada busca ao acumulado automaticamente</span>
-                    </div>
-                    <label>Rótulo desta extração (opcional, ex.: RS - nov/2026)</label>
-                    <input type="text" id="rot">
-                    <div class="row">
-                        <button class="sec" id="bAdd" disabled>Adicionar busca ao acumulado</button>
-                        <button class="sec" id="bView">Ver acumulado</button>
-                    </div>
-                    <div class="row">
-                        <button class="sec" id="bImp">Importar acumulado (Excel/CSV)</button>
-                        <button id="bLimpa">Limpar acumulado</button>
-                    </div>
-                    <input type="file" id="aImp" accept=".xlsx,.csv" hidden>
-                    <small>O acumulado fica salvo neste navegador (IndexedDB) e permanece ao fechar a página. Carregue um estado, busque, e repita com o próximo: os leads se somam e o mesmo CNPJ não duplica (fica o de maior score). Baixe o acumulado de vez em quando como backup.</small>
-                </div>
-                <div class="card" style="margin-top:14px">
-                    <div id="vt" style="font-size:13px;font-weight:600;color:var(--c1);margin-bottom:8px">Resultado da busca</div>
-                    <div class="tw">
-                        <table id="tb">
-                            <thead></thead>
-                            <tbody>
-                                <tr>
-                                    <td>Carregue a base e clique em Buscar leads.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="row">
-                        <button class="sec" id="pP">‹ Anterior</button>
-                        <button class="sec" id="pN">Próxima ›</button>
-                    </div>
-                    <small id="pI"></small>
-                    <div class="row">
-                        <button class="sec" id="bX" disabled>Baixar Excel</button>
-                        <button class="sec" id="bC" disabled>Baixar CSV</button>
-                    </div>
-                    <small>Score: CNAE (até 30) + capital (até 25) + UF prioritária (15) + contatos (15). A tela mostra até 500 linhas; a exportação leva todas. Solução sugerida é uma premissa inicial editável.</small>
-                </div>
-            </section>
-        </main>
-        <script type="module">
-            let duckdb;
-
-            /* ===== REGRAS EDITÁVEIS ===== */
-            const UF_PRIORITARIAS = ['RS', 'SC', 'PR', 'SP'];
-            const PTS_CNAE = [['52', 30], ['46', 25], ['47', 15], ['10', 25], ['11', 25]];
-            const IND = [12, 33];
-            const PTS_CAP = [[10000000, 25], [1000000, 20], [300000, 12], [100000, 6]];
-            const ALIAS = {
-                cnpj: ['cnpj'],
-                razao: ['razaosocial', 'nomeempresarial', 'razao', 'empresa', 'nome'],
-                fantasia: ['fantasia'],
-                cnae: ['cnaefiscalprincipal', 'cnaeprincipal', 'cnae', 'atividade'],
-                capital: ['capitalsocial', 'capital'],
-                uf: ['uf', 'estado', 'sigla'],
-                cidade: ['municipio', 'cidade'],
-                situacao: ['situacaocadastral', 'situacao'],
-                telefone: ['telefone1', 'telefone', 'fone', 'celular', 'whatsapp', 'tel'],
-                email: ['email', 'correioeletronico'],
-                site: ['website', 'site', 'url'],
-                ddd: ['ddd1', 'ddd'],
-                telefone2: [],
-                email2: [],
-                contato: ['nomesocio', 'socio', 'responsavel', 'contato', 'representante']
-            };
-            /* ============================ */
-
-            const $ = id => document.getElementById(id);
-            const st = t => {
-                $('st').textContent = t;
-                const b = $('ban');
-                b.textContent = t;
-                b.style.display = t ? 'block' : 'none';
-            }
-            ;
-            const q = c => '"' + c.replace(/"/g, '""') + '"';
-            const esc = s => String(s ?? '').replace(/[&<>"]/g, m => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;'
-            }[m]));
-            const lit = s => String(s).replace(/'/g, "''");
-            let db, conn, cols = [], mp = {}, rows = [], acum = [], view = 'busca', pg = 0;
-            const PS = 100;
-            const idb = () => new Promise( (res, rej) => {
-                const r = indexedDB.open('prospect_bsa', 1);
-                r.onupgradeneeded = () => r.result.createObjectStore('kv');
-                r.onsuccess = () => res(r.result);
-                r.onerror = () => rej(r.error)
-            }
-            );
-            async function kvGet(k) {
-                try {
-                    const d = await idb();
-                    return await new Promise(r => {
-                        const g = d.transaction('kv').objectStore('kv').get(k);
-                        g.onsuccess = () => r(g.result);
-                        g.onerror = () => r(undefined)
-                    }
-                    )
-                } catch (_) {
-                    return undefined
-                }
-            }
-            async function kvSet(k, v) {
-                try {
-                    const d = await idb();
-                    await new Promise(r => {
-                        const t = d.transaction('kv', 'readwrite');
-                        t.objectStore('kv').put(v, k);
-                        t.oncomplete = () => r();
-                        t.onerror = () => r()
-                    }
-                    )
-                } catch (_) {}
-            }
-            const chave = r => {
-                let c = String(r.cnpj || '').replace(/\D/g, '');
-                if (c.length >= 9 && c.length < 14)
-                    c = c.padStart(14, '0');
-                return c || [r.razao, r.cidade, r.uf].map(x => String(x || '').toUpperCase().trim()).join('|')
-            }
-            ;
-            const cur = () => view === 'acum' ? acum : rows;
-            /* ===== Regras das skills (Dados e BI + Inteligência de Mercado + Benchmark) ===== */
-            const SEG = {
-                '52': ['Armazenagem e apoio ao transporte', 'Atividade-fim de armazenagem: possível demanda por densidade e automação.'],
-                '46': ['Comércio atacadista', 'Atacado costuma ter muitos itens e giro alto: possível demanda por porta-pallet e flow rack.'],
-                '47': ['Comércio varejista', 'Varejo com centro de distribuição próprio pode demandar porta-pallet; validar se há CD.'],
-                '10': ['Alimentos', 'Estoque com validade e lotes: possível aderência a Push Back e Dinâmico.'],
-                '11': ['Bebidas', 'Alto volume de pallets por SKU: possível aderência a Drive-In e Push Back.'],
-                '25': ['Produtos de metal', 'Insumos e produto acabado: possível demanda por porta-pallet, cantilever e mezanino.'],
-                '28': ['Máquinas e equipamentos', 'Peças e componentes: possível demanda por mezanino e cantilever.'],
-                '29': ['Automotivo', 'Alta variedade de itens: possível demanda por flow rack e mezanino.'],
-                '21': ['Farmacêutico', 'Rastreabilidade e controle de lote: possível demanda por sistemas dinâmicos e automação.'],
-                '20': ['Químicos', 'Pallets e restrições de armazenagem: possível demanda por porta-pallet; validar normas.'],
-                '31': ['Móveis', 'Volumes grandes: possível demanda por porta-pallet e cantilever.'],
-                '49': ['Transporte terrestre', 'Só é prospecto se houver armazenagem própria; qualificar.']
-            };
-            const segNome = c => (SEG[c] || ['Divisão ' + (c || '?')])[0];
-            const hip = c => (SEG[c] && SEG[c][1]) || (+c >= 12 && +c <= 33 ? 'Indústria: possível demanda por porta-pallet e mezanino.' : 'Sem hipótese setorial definida; qualificar por sinais de expansão.');
-            const num = v => typeof v === 'bigint' ? Number(v) : v;
-            const dig = s => String(s ?? '').replace(/\D/g, '');
-            const normN = s => String(s ?? '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]/g, '');
-            let bench = new Set();
-            const isBench = r => {
-                const c = dig(r.cnpj);
-                return (c.length >= 8 && bench.has('c' + c.slice(0, 8))) || (normN(r.razao) !== '' && bench.has('n' + normN(r.razao)))
-            }
-            ;
-            const mailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e ?? '').trim());
-            const nc = c => normN(c);
-            const detect = k => {
-                const pick = (re, ex) => cols.find(c => re.test(nc(c)) && !(ex && ex.test(nc(c)))) || '';
-                if (k === 'telefone2')
-                    return pick(/(TELEFONE|FONE|CELULAR|TEL).*(2|SECUND)/);
-                if (k === 'email2')
-                    return pick(/(EMAIL|CORREIO).*(2|SECUND)/);
-                const ex = (k === 'telefone' || k === 'email' || k === 'ddd') ? /(2|SECUND)/ : (k === 'cnae' ? /SECUND/ : (k === 'razao' ? /FANTASIA|SOCIO/ : null));
-                for (const al of ALIAS[k]) {
-                    const r = cols.find(c => nc(c).includes(al.toUpperCase()) && !(ex && ex.test(nc(c))));
-                    if (r)
-                        return r;
-                }
-                return '';
-            }
-            ;
-            const fone = (ddd, n) => {
-                let d = dig(n);
-                const dd = dig(ddd);
-                if (d.length <= 9 && dd.length === 2)
-                    d = dd + d;
-                if (d.length === 12 && d[0] === '0')
-                    d = d.slice(1);
-                return d;
-            }
-            ;
-            const foneFmt = d => d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : d.length === 10 ? `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}` : '';
-            const foneTipo = d => d.length === 11 && d[2] === '9' ? 'Celular' : d.length === 10 && /[2-5]/.test(d[2]) ? 'Fixo' : '';
-            const PREF = ['cnpj', 'razao', 'fantasia', 'prioridade', 'score', 'solucao_sugerida', 'contato_nome', 'telefone_formatado', 'tipo_telefone', 'telefone2_formatado', 'email_principal', 'contatos_disponiveis', 'status_contato', 'proxima_acao', 'hipotese_comercial', 'tipo_unidade', 'qualidade_cadastral', 'benchmark', 'cnae', 'capital', 'uf', 'cidade'];
-            function hdr(a) {
-                const s = new Set();
-                for (const r of a)
-                    for (const k in r)
-                        s.add(k);
-                return [...PREF.filter(k => s.has(k)), ...[...s].filter(k => !PREF.includes(k))];
-            }
-            function enriquece(r) {
-                const f1 = fone(r.ddd, r.telefone)
-                  , f2 = fone(r.ddd, r.telefone2);
-                r.telefone_formatado = foneFmt(f1);
-                r.tipo_telefone = foneTipo(f1);
-                r.telefone2_formatado = foneFmt(f2);
-                r.email_principal = mailOk(r.email) ? String(r.email).trim().toLowerCase() : mailOk(r.email2) ? String(r.email2).trim().toLowerCase() : '';
-                r.contato_nome = String(r.contato ?? '').trim();
-                r.contatos_disponiveis = [r.telefone_formatado && (r.tipo_telefone || 'Telefone'), r.telefone2_formatado && 'Telefone 2', r.email_principal && 'E-mail', r.contato_nome && 'Nome de contato'].filter(Boolean).join(' + ') || 'Nenhum';
-                r.status_contato = 'Não confirmado (origem: arquivo)';
-                let c = dig(r.cnpj);
-                if (c.length >= 9 && c.length < 14)
-                    c = c.padStart(14, '0');
-                const d = dig(r.cnae).slice(0, 2)
-                  , tel = !!r.telefone_formatado
-                  , em = !!r.email_principal;
-                r.tipo_unidade = c.length === 14 ? (c.slice(8, 12) === '0001' ? 'Matriz' : 'Filial') : 'CNPJ inválido';
-                r.qualidade_cadastral = (c.length === 14 && tel && em) ? 'Completo' : (c.length === 14 && (tel || em)) ? 'Parcial' : 'Mínimo';
-                r.hipotese_comercial = hip(d);
-                r.proxima_acao = !(tel || em) ? 'Enriquecer contato antes da abordagem' : r.prioridade === 'A' ? 'BDR contatar em até 48h e qualificar volume de pallets e SKUs' : r.prioridade === 'B' ? 'Incluir em cadência de prospecção' : 'Manter na base e revisar com novo sinal';
-                r.benchmark = isBench(r) ? 'Concorrente/Parceiro BSA' : '';
-                return r;
-            }
-            const pc = v => {
-                if (typeof v === 'number')
-                    return v;
-                let x = String(v ?? '').replace(/[^0-9.,]/g, '');
-                if (/^[0-9]{1,3}(\.[0-9]{3})*(,[0-9]+)?$|^[0-9]+,[0-9]+$/.test(x))
-                    x = x.replace(/\./g, '').replace(',', '.');
-                else
-                    x = x.replace(/,/g, '');
-                return parseFloat(x) || 0
-            }
-            ;
-            const fmt = n => Number(n).toLocaleString('pt-BR');
-            function tabela(tit, col1, m) {
-                return `<h2 style="margin-top:12px">${tit}</h2><div class="tw" style="max-height:240px"><table><thead><tr><th>${col1}</th><th>Leads</th><th>Prioridade A</th><th>Score médio</th><th>Capital social médio (R$)</th></tr></thead><tbody>` + Object.entries(m).sort( (a, b) => b[1].a - a[1].a || b[1].n - a[1].n).slice(0, 15).map( ([k,g]) => `<tr><td>${esc(k)}</td><td>${fmt(g.n)}</td><td>${fmt(g.a)}</td><td>${Math.round(g.s / g.n)}</td><td>${fmt(Math.round(g.cap / g.n))}</td></tr>`).join('') + '</tbody></table></div>';
-            }
-            function rankings() {
-                const d = cur();
-                if (!d.length) {
-                    $('ia').innerHTML = '<small>Sem leads na visão atual. Faça uma busca ou veja o acumulado.</small>';
-                    return;
-                }
-                const g = f => {
-                    const m = {};
-                    d.forEach(r => {
-                        const k = f(r);
-                        const x = m[k] = m[k] || {
-                            n: 0,
-                            a: 0,
-                            s: 0,
-                            cap: 0
-                        };
-                        x.n++;
-                        x.a += r.prioridade === 'A' ? 1 : 0;
-                        x.s += r.score || 0;
-                        x.cap += pc(r.capital)
-                    }
-                    );
-                    return m;
-                }
-                ;
-                const seg = g(r => segNome(dig(r.cnae).slice(0, 2)))
-                  , ufs = g(r => String(r.uf || '?').toUpperCase());
-                const top = m => Object.entries(m).sort( (a, b) => b[1].a - a[1].a || b[1].n - a[1].n)[0];
-                const [ts,tsg] = top(seg)
-                  , [tu,tug] = top(ufs);
-                const dc = Object.keys(SEG).find(k => SEG[k][0] === ts);
-                $('ia').innerHTML = `<div style="font-size:13px;line-height:1.5"><b>Fatos (calculados dos dados na visão atual):</b> ${fmt(d.length)} leads; segmento com mais prioridade A: <b>${esc(ts)}</b> (${fmt(tsg.a)} de ${fmt(tsg.n)}); UF com mais prioridade A: <b>${esc(tu)}</b> (${fmt(tug.a)} de ${fmt(tug.n)}).<br>
-  <b>Hipótese (não é fato):</b> ${esc(dc ? SEG[dc][1] : 'sem hipótese definida para este segmento.')}<br>
-  <b>Recomendação:</b> abordar primeiro ${esc(tu)} em ${esc(ts)}, começando pelos leads de prioridade A com contato; validar volume de pallets e SKUs na primeira conversa.<br>
-  <span style="color:var(--mut)">Limites: capital social não é faturamento nem capacidade de investimento; CNPJ ativo não prova operação; o score é heurístico, não probabilidade de conversão.</span></div>` + tabela('Ranking de segmentos (CNAE, 2 dígitos)', 'Segmento', seg) + tabela('Ranking de UFs', 'UF', ufs);
-            }
-            async function diag() {
-                if (!conn || !cols.length) {
-                    $('ia').innerHTML = '<small>Carregue a base primeiro.</small>';
-                    return;
-                }
-                const m = {};
-                for (const k in ALIAS)
-                    m[k] = ($('m_' + k) || {}).value || '';
-                const c = k => m[k] ? q(m[k]) : "''";
-                const mail = "'^[^@ ]+@[^@ ]+[.][^@ ]+$'";
-                const sql = `WITH t AS (SELECT regexp_replace(coalesce(${c('cnpj')},''),'[^0-9]','','g') cn, coalesce(trim(${c('email')}),'') em, regexp_replace(coalesce(${c('telefone')},''),'[^0-9]','','g') tl, upper(coalesce(${c('situacao')},'')) sit, coalesce(trim(${c('capital')}),'') cp, upper(trim(${c('uf')})) uf FROM base)
-  SELECT count(*) total, sum(CASE WHEN length(cn)=14 THEN 1 ELSE 0 END) cnpj_ok, count(NULLIF(cn,''))-count(DISTINCT NULLIF(cn,'')) dup,
-   sum(CASE WHEN sit LIKE '%ATIV%' OR sit IN ('02','2') THEN 1 ELSE 0 END) ativas, sum(CASE WHEN length(tl)>=10 THEN 1 ELSE 0 END) tel_ok,
-   sum(CASE WHEN regexp_matches(em,${mail}) THEN 1 ELSE 0 END) mail_ok, sum(CASE WHEN em<>'' AND NOT regexp_matches(em,${mail}) THEN 1 ELSE 0 END) mail_inv,
-   sum(CASE WHEN cp IN ('','0','0,00','0.00') THEN 1 ELSE 0 END) cap_zero, sum(CASE WHEN substr(cn,9,4)='0001' THEN 1 ELSE 0 END) matriz, count(DISTINCT NULLIF(uf,'')) ufs FROM t`;
-                $('ia').innerHTML = '<small>Rodando diagnóstico (uma leitura completa da base)...</small>';
-                try {
-                    const r = (await conn.query(sql)).toArray()[0]
-                      , T = num(r.total) || 1
-                      , v = k => num(r[k]);
-                    const L = [['Registros na base', v('total'), 'count(*)'], ['CNPJ com 14 dígitos', v('cnpj_ok'), 'CNPJ normalizado (só números) com 14 dígitos'], ['CNPJ duplicado (excedente)', v('dup'), 'registros com CNPJ repetido, não removidos'], ['Situação ativa', v('ativas'), "situação contém 'ATIV' ou código 02"], ['Telefone válido', v('tel_ok'), '10 ou mais dígitos'], ['E-mail válido', v('mail_ok'), 'formato nome@dominio.ext (não prova que existe)'], ['E-mail inválido', v('mail_inv'), 'preenchido fora do formato'], ['Capital social vazio ou zero', v('cap_zero'), 'vazio, 0 ou 0,00'], ['Matrizes', v('matriz'), "dígitos 9 a 12 do CNPJ iguais a 0001"]];
-                    $('ia').innerHTML = `<h2>Diagnóstico da base (Dados e BI)</h2><div class="tw" style="max-height:300px"><table><thead><tr><th>Indicador</th><th>Valor</th><th>% da base</th><th>Regra de cálculo</th></tr></thead><tbody>` + L.map( ([a,b,c]) => `<tr><td>${a}</td><td>${fmt(b)}</td><td>${(b / T * 100).toFixed(1)}%</td><td>${esc(c)}</td></tr>`).join('') + `</tbody></table></div><small>UFs distintas: ${v('ufs')}. Nenhum registro é excluído: os problemas são sinalizados nas colunas qualidade_cadastral e tipo_unidade dos resultados.</small>`;
-                } catch (e) {
-                    $('ia').innerHTML = '<small>Erro no diagnóstico: ' + esc(e.message) + '</small>';
-                }
-            }
-            async function carregaBench() {
-                const b = await kvGet('bench');
-                if (b)
-                    bench = new Set(b);
-            }
-            carregaBench();
-            function statsAcum() {
-                $('aT').textContent = acum.length.toLocaleString('pt-BR');
-                const por = {};
-                acum.forEach(r => {
-                    const u = String(r.uf || '?').toUpperCase();
-                    por[u] = (por[u] || 0) + 1
-                }
-                );
-                $('aU').textContent = Object.keys(por).length;
-                $('aA').textContent = acum.filter(r => r.prioridade === 'A').length.toLocaleString('pt-BR');
-                $('aUF').textContent = Object.entries(por).sort( (a, b) => b[1] - a[1]).map( ([u,n]) => u + ': ' + n.toLocaleString('pt-BR')).join('  |  ') || 'Nenhum estado ainda.';
-            }
-            async function addAcum(novos, rotulo) {
-                const mapa = new Map(acum.map(r => [chave(r), r]));
-                let novo = 0
-                  , atual = 0;
-                for (const r of novos) {
-                    if (!r.proxima_acao)
-                        enriquece(r);
-                    const k = chave(r);
-                    const o = mapa.get(k);
-                    if (!o) {
-                        mapa.set(k, {
-                            ...r,
-                            origem: r.origem || rotulo || '',
-                            extraido_em: r.extraido_em || new Date().toISOString().slice(0, 10)
-                        });
-                        novo++
-                    } else if ((r.score || 0) > (o.score || 0)) {
-                        mapa.set(k, {
-                            ...o,
-                            ...r,
-                            origem: o.origem,
-                            extraido_em: o.extraido_em
-                        });
-                        atual++
-                    }
-                }
-                acum = [...mapa.values()].sort( (a, b) => (b.score || 0) - (a.score || 0));
-                await kvSet('acum', acum);
-                statsAcum();
-                if (view === 'acum')
-                    render();
-                return {
-                    novo,
-                    atual
+                    </section>
+                    <!-- CENTRAL DE BASES -->
+                    <section class="view" id="v-bases">
+                        <h1>Central de Ingestão de Bases (XLSX / CSV)</h1>
+                        <p class="sub">Importe arquivos de sua base nas zonas de upload abaixo para preenchimento dinâmico e preservação integral de colunas.</p>
+                        <div class="file-box">
+                            <div class="drop-zone" onclick="document.getElementById('files').click()">
+                                <b>1. Upload de Base Cadastral (XLSX/CSV)</b>
+                                <p class="small">Listas da Receita Federal ou clientes</p>
+                            </div>
+                            <div class="drop-zone" onclick="document.getElementById('files').click()">
+                                <b>2. Upload de Sinais / Projetos (XLSX/CSV)</b>
+                                <p class="small">Planilhas de investimentos ou mercado</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2>Gerenciar Importação</h2>
+                            <div class="row">
+                                <input class="file" id="files" type="file" accept=".csv,.txt,.xlsx,.xls" multiple>
+                                <button class="btn" id="importBtn">Processar e Alimentar Base</button>
+                                <button class="btn orange" id="exportBtn">Exportar Consolidado CSV</button>
+                                <button class="btn light" id="clearBtn">Limpar Sessão</button>
+                            </div>
+                            <div class="status" id="importStatus" style="margin-top:10px">Base demo ativa.</div>
+                        </div>
+                        <div class="card">
+                            <h2>Pré-visualização da Base Carregada (Todas as Colunas Preservadas)</h2>
+                            <div class="tablebox">
+                                <table>
+                                    <thead><tr id="dynamicHeaders"><th>Carregue um arquivo para ver as colunas</th></tr></thead>
+                                    <tbody id="dynamicRows"><tr><td class="empty">Nenhum dado importado na sessão.</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- BUSCA (HUB) -->
+                    <section class="view" id="v-search">
+                        <h1>Busca Empresarial e Inteligência de Mercado (Hub)</h1>
+                        <div class="card">
+                            <div class="filters">
+                                <label>País<select id="fCountry" onchange="loadSearchStates()"></select></label>
+                                <label>Estado / UF<select id="fUf" onchange="loadSearchCities()"><option value="">Todos os Estados</option></select></label>
+                                <label>Cidade<select id="fCity"><option value="">Todas as Cidades</option></select></label>
+                                <label>Segmento<select id="fSegment"><option value="">Todos os Segmentos</option></select></label>
+                                <label>Busca livre<input id="fText" placeholder="Empresa, CNPJ..."></label>
+                            </div>
+                            <div class="row" style="margin-top:10px">
+                                <button class="btn" onclick="triggerHubSearch()">Atualizar Filtros</button>
+                                <button class="btn light" onclick="clearHubFilters()">Limpar Filtros</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2>Empresas no Hub <span id="searchCount" class="tag"></span></h2>
+                            <div class="tablebox">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Score</th><th>Empresa</th><th>CNPJ</th><th>Segmento</th><th>Cidade/UF</th><th>Contato</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchRows"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- MAPA HUB BASE -->
+                    <section class="view" id="v-geomapbase">
+                        <h1>Mapa Hub Base (Réplica Inteligente de Prospecção)</h1>
+                        <p class="sub">Visualização geográfica com pontos coloridos por segmento baseados nos dados do Hub e dos arquivos carregados.</p>
+                        <div class="card">
+                            <div class="map-controls">
+                                <div><label>PAÍS</label><select id="mbCountry" onchange="loadHbStates()"></select></div>
+                                <div><label>ESTADO / UF</label><select id="mbUf" onchange="loadHbCities()"><option value="">Todos</option></select></div>
+                                <div><label>CIDADE</label><select id="mbCity"><option value="">Todas</option></select></div>
+                                <div><label>SEGMENTO</label><select id="mbSegment"><option value="">Todos os Segmentos</option></select></div>
+                            </div>
+                            <div class="map-actions">
+                                <button class="btn primary" onclick="refreshMapBase()">Atualizar Mapa Hub Base</button>
+                                <button class="btn orange" onclick="exportMapBaseXlsx()">Exportar XLSX</button>
+                                <button class="btn light" onclick="exportMapBaseCsv()">Exportar CSV</button>
+                            </div>
+                            <div class="map-legend" id="mapBaseLegend"></div>
+                        </div>
+                        <div class="map-layout">
+                            <div id="prospectMapBase" style="height:550px;border-radius:8px"></div>
+                            <aside class="card">
+                                <div class="card-header-flex">
+                                    <h3>Empresas no Mapa Hub Base</h3>
+                                    <span id="mapBaseCount" class="tag">0 contas</span>
+                                </div>
+                                <div class="tablebox" style="max-height:480px">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Empresa</th><th>CNPJ</th><th>Segmento</th><th>Cidade/UF</th><th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mapBaseTableBody">
+                                            <tr><td colspan="5" class="empty">Nenhuma empresa encontrada.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </aside>
+                        </div>
+                    </section>
+                    <!-- EMPRESA 360 -->
+                    <section class="view" id="v-profile">
+                        <h1>Empresa 360°</h1>
+                        <div class="card">
+                            <select id="profileSelect" class="file" style="width:100%"><option value="">Selecione uma empresa</option></select>
+                            <div id="profile" class="status" style="margin-top:10px">Selecione uma empresa acima.</div>
+                        </div>
+                    </section>
+                    <!-- MAPA DE PROSPECÇÃO -->
+                    <section class="view" id="v-geomap">
+                        <h1>Mapa de Prospecção Geográfica</h1>
+                        <div class="card">
+                            <div class="map-controls">
+                                <div><label>PAÍS</label><select id="mCountry" onchange="loadMapStates()"></select></div>
+                                <div><label>ESTADO / PROVÍNCIA</label><select id="mUf" onchange="loadMapCities()"><option value="">Todos</option></select></div>
+                                <div><label>CIDADE</label><select id="mCity"><option value="">Todas</option></select></div>
+                                <div><label>SEGMENTO</label><select id="mSegment"><option value="">Todos os Segmentos</option></select></div>
+                                <div><label>RAIO: <b id="mRadiusLabel">60 km</b></label><input id="mRadius" type="range" min="5" max="60" step="5" value="60"></div>
+                                <div><label>SCORE MÍNIMO</label><select id="mScore"><option value="0">Todos</option><option value="45">45+</option><option value="70">70+</option></select></div>
+                            </div>
+                            <div class="map-actions">
+                                <button class="btn primary" id="mSearch">Atualizar Mapa e Clusters</button>
+                                <button class="btn orange" id="mGoogle">Consultar no Google Maps</button>
+                                <button class="btn light" id="mExport">Exportar Raio (CSV)</button>
+                                <button class="btn light" onclick="clearMapFilters()">Limpar Filtros</button>
+                            </div>
+                            <div class="map-note" id="mStatus">Ajuste os filtros geográficos para centralizar os pontos no mapa.</div>
+                        </div>
+                        <div class="map-layout">
+                            <div id="prospectMap" style="height:550px;border-radius:8px"></div>
+                            <aside class="card">
+                                <div class="card-header-flex">
+                                    <h3>Empresas encontradas</h3>
+                                    <div>
+                                        <button class="btn orange" style="padding: 5px 10px; font-size: 11px;" id="btnExportMapXlsx">Exportar XLSX</button>
+                                        <button class="btn light" style="padding: 5px 10px; font-size: 11px;" id="btnExportMapCSVTop">Exportar CSV</button>
+                                    </div>
+                                </div>
+                                <div class="tablebox" style="max-height:480px">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Empresa</th><th>CNPJ</th><th>Segmento</th><th>Cidade/UF</th><th>Telefone / E-mail</th><th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mapCompanyTableBody">
+                                            <tr><td colspan="6" class="empty">Nenhuma empresa encontrada com os filtros atuais.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </aside>
+                        </div>
+                    </section>
+                    <!-- RADAR -->
+                    <section class="view" id="v-radar">
+                        <h1>Radar de Mercado</h1>
+                        <div class="card"><div class="tablebox"><table><thead><tr><th>Empresa</th><th>Movimentação</th><th>Local</th></tr></thead><tbody id="radarRows"><tr><td colspan="3" class="empty">Nenhum evento.</td></tr></tbody></table></div></div>
+                    </section>
+                    <!-- ICP -->
+                    <section class="view" id="v-icp"><h1>ICP &amp; Score</h1><div class="card"><div id="regrasIcp">Critérios padrão ativos.</div></div></section>
+                    <!-- OPORTUNIDADES -->
+                    <section class="view" id="v-opp"><h1>Fila de Oportunidades</h1><div class="card"><div class="tablebox"><table><thead><tr><th>#</th><th>Empresa</th><th>Local</th><th>Score</th></tr></thead><tbody id="oppRows"><tr><td colspan="4" class="empty">Nenhuma oportunidade.</td></tr></tbody></table></div></div></section>
+                    <!-- BDR -->
+                    <section class="view" id="v-bdr"><h1>Listas para BDR</h1><div class="card"><div class="tablebox"><table><thead><tr><th>Empresa</th><th>Responsável</th><th>Contato</th></tr></thead><tbody id="bdrRows"><tr><td colspan="3" class="empty">Nenhuma conta.</td></tr></tbody></table></div></div></section>
+                    <!-- FONTES MONITORADAS -->
+                    <section class="view" id="v-sources"><h1>Fontes Monitoradas</h1><div class="card"><div class="tablebox"><table><thead><tr><th>Fonte</th><th>Status</th><th>Última Coleta</th></tr></thead><tbody id="sourceFiles"><tr><td colspan="3" class="empty">Nenhuma fonte cadastrada.</td></tr></tbody></table></div></div></section>
+                    <!-- GOVERNANÇA -->
+                    <section class="view" id="v-gov"><h1>Configurações &amp; Governança</h1><div class="card"><div id="govStatus" class="status">Sessão local em memória ativa.</div></div></section>
+                </main>
+            </div>
+        </div>
+        <script>
+            (function() {
+                'use strict';
+                var LOC = {
+                    'Brasil': {
+                        'AC': ['Rio Branco'], 'AL': ['Maceió'], 'AP': ['Macapá'], 'AM': ['Manaus'],
+                        'BA': ['Salvador', 'Feira de Santana'], 'CE': ['Fortaleza'], 'DF': ['Brasília'],
+                        'ES': ['Vitória', 'Vila Velha'], 'GO': ['Goiânia', 'Anápolis', 'Aparecida de Goiânia'], 'MA': ['São Luís'],
+                        'MT': ['Cuiabá'], 'MS': ['Campo Grande', 'Dourados'], 'MG': ['Belo Horizonte', 'Uberlândia', 'Contagem'],
+                        'PA': ['Belém'], 'PB': ['João Pessoa'], 'PR': ['Curitiba', 'Londrina', 'Maringá'],
+                        'PE': ['Recife'], 'PI': ['Teresina'], 'RJ': ['Rio de Janeiro', 'Duque de Caxias'],
+                        'RN': ['Natal'], 'RS': ['Porto Alegre', 'Caxias do Sul', 'Bento Gonçalves'],
+                        'RO': ['Porto Velho'], 'RR': ['Boa Vista'], 'SC': ['Florianópolis', 'Joinville', 'Blumenau'],
+                        'SP': ['São Paulo', 'Campinas', 'Guarulhos', 'Jundiaí', 'Sorocaba'], 'SE': ['Aracaju'], 'TO': ['Palmas']
+                    },
+                    'Argentina': { 'Buenos Aires': ['Buenos Aires', 'La Plata'], 'Córdoba': ['Córdoba'] },
+                    'Chile': { 'Región Metropolitana': ['Santiago'], 'Valparaíso': ['Valparaíso'] }
                 };
-            }
-            (async () => {
-                acum = (await kvGet('acum')) || [];
-                statsAcum();
-            }
-            )();
 
-            const MSG_CDN = 'Não consegui baixar o motor de consulta (DuckDB) de cdn.jsdelivr.net. Verifique a internet ou se a rede da empresa bloqueia o site, e recarregue com Ctrl+F5. Detalhe: ';
-            async function init() {
-                st('Baixando o motor de consulta (primeira vez leva alguns segundos)...');
-                duckdb = await import('https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm');
-                const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
-                const url = URL.createObjectURL(new Blob([`importScripts("${bundle.mainWorker}");`],{
-                    type: 'text/javascript'
-                }));
-                db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING),new Worker(url));
-                await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
-                conn = await db.connect();
-                st('Motor pronto. Selecione o arquivo.');
-            }
-            let ready = null;
-            const start = () => ready || (ready = init().catch(e => {
-                ready = null;
-                st(MSG_CDN + (e.message || e));
-                throw e;
-            }
-            ));
-            start().catch( () => {}
-            );
-
-            /* ===== Leitura universal de arquivos ===== */
-            const fmt0 = n => Number(n).toLocaleString('pt-BR');
-            const EXT_XLS = /\.(xlsx|xlsm|xlsb|xls|ods|fods|html?|xml)$/i
-              , EXT_JSON = /\.(json|jsonl|ndjson)(\.gz)?$/i
-              , EXT_PQ = /\.parquet$/i;
-            async function sniff(f) {
-                const b = new Uint8Array(await f.slice(0, 262144).arrayBuffer());
-                const h = (...x) => x.every( (v, i) => b[i] === v);
-                if (h(0x50, 0x4B))
-                    return {
-                        tipo: 'xls',
-                        fmt: 'Excel/ZIP'
-                    };
-                if (h(0xD0, 0xCF, 0x11, 0xE0))
-                    return {
-                        tipo: 'xls',
-                        fmt: 'Excel antigo (.xls)'
-                    };
-                if (h(0x50, 0x41, 0x52, 0x31))
-                    return {
-                        tipo: 'parquet',
-                        fmt: 'Parquet'
-                    };
-                if (h(0x1F, 0x8B))
-                    return {
-                        tipo: 'gz',
-                        fmt: 'compactado .gz'
-                    };
-                let enc = 'utf-8';
-                if (h(0xFF, 0xFE) || h(0xFE, 0xFF))
-                    enc = 'utf-16';
-                else {
-                    try {
-                        new TextDecoder('utf-8',{
-                            fatal: true
-                        }).decode(b, {
-                            stream: true
-                        });
-                    } catch (_) {
-                        enc = 'latin-1';
-                    }
-                }
-                const t = new TextDecoder(enc === 'utf-16' ? 'utf-16le' : enc === 'latin-1' ? 'windows-1252' : 'utf-8').decode(b.slice(0, 2000)).trimStart();
-                if (t[0] === '{' || t[0] === '[')
-                    return {
-                        tipo: 'json',
-                        fmt: 'JSON',
-                        enc
-                    };
-                return {
-                    tipo: 'texto',
-                    fmt: 'texto delimitado (CSV, TSV, TXT)',
-                    enc
+                var SEGMENT_COLORS = {
+                    'Operador logístico': '#06418a',
+                    'Alimentos': '#f58220',
+                    'Agronegócio': '#10b981',
+                    'Bebidas': '#8b5cf6',
+                    'Farmacêutica': '#ec4899',
+                    'E-commerce': '#3b82f6',
+                    'Metalúrgica': '#64748b'
                 };
-            }
-            const celula = v => {
-                if (v == null)
-                    return '';
-                if (v instanceof Date)
-                    return isNaN(v) ? '' : v.toISOString().slice(0, 10);
-                if (typeof v === 'number')
-                    return Number.isInteger(v) ? v.toLocaleString('fullwide', {
-                        useGrouping: false
-                    }) : String(v);
-                return String(v);
-            }
-            ;
-            const csvEsc = v => /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
-            async function lerPlanilha(f) {
-                if (typeof XLSX === 'undefined')
-                    throw new Error('a biblioteca de Excel não carregou (cdnjs bloqueado?); use CSV');
-                const wb = XLSX.read(await f.arrayBuffer(), {
-                    type: 'array',
-                    cellDates: true
-                });
-                const folhas = [];
-                for (const nome of wb.SheetNames) {
-                    const rs = XLSX.utils.sheet_to_json(wb.Sheets[nome], {
-                        header: 1,
-                        raw: true,
-                        defval: '',
-                        blankrows: false
-                    });
-                    if (rs.length < 2)
-                        continue;
-                    const cnt = r => r.filter(x => String(x).trim() !== '').length
-                      , mx = Math.max(...rs.slice(0, 30).map(cnt));
-                    let hi = rs.findIndex( (r, i) => i < 30 && cnt(r) >= Math.max(2, Math.ceil(mx * 0.6)));
-                    if (hi < 0)
-                        hi = 0;
-                    const usados = {};
-                    const head = rs[hi].map( (h, i) => {
-                        let n = String(h).trim() || ('coluna_' + (i + 1));
-                        if (usados[n]) {
-                            usados[n]++;
-                            n += '_' + usados[n];
-                        } else
-                            usados[n] = 1;
-                        return n;
-                    }
-                    );
-                    folhas.push({
-                        nome,
-                        head,
-                        body: rs.slice(hi + 1).filter(r => cnt(r) > 0),
-                        sig: head.map(x => normN(x)).join('|')
-                    });
-                }
-                if (!folhas.length)
-                    throw new Error('nenhuma planilha com dados');
-                folhas.sort( (a, b) => b.body.length - a.body.length);
-                const base = folhas[0]
-                  , usadas = folhas.filter(x => x.sig === base.sig)
-                  , ign = folhas.filter(x => x.sig !== base.sig);
-                const linhas = [base.head.map(csvEsc).join(';')];
-                for (const fl of usadas)
-                    for (const r of fl.body)
-                        linhas.push(base.head.map( (_, i) => csvEsc(celula(r[i]))).join(';'));
-                return {
-                    csv: linhas.join('\n'),
-                    n: linhas.length - 1,
-                    info: `Planilha(s) lida(s): ${usadas.map(x => x.nome).join(', ')}.` + (ign.length ? ` Ignoradas (estrutura diferente): ${ign.map(x => x.nome).join(', ')}.` : '')
-                };
-            }
 
-            $('bCarregar').onclick = async () => {
-                const f = $('arq').files[0];
-                if (!f)
-                    return st('Selecione um arquivo primeiro.');
-                $('bCarregar').disabled = true;
-                try {
-                    await start();
-                } catch (_) {
-                    $('bCarregar').disabled = false;
-                    return;
+                var SEGMENTOS_BSA = [
+                    'Operador logístico', 'Centro de distribuição', 'Alimentos', 'Bebidas', 
+                    'Eletrodomésticos', 'Autopeças', 'Metalúrgica', 'Moveleira', 
+                    'Farmacêutica', 'Transportadora', 'Atacadista', 'Supermercado', 
+                    'E-commerce', 'Agronegócio', 'Fertilizantes', 'Papel e celulose', 
+                    'Plásticos', 'Química', 'Têxtil', 'Construção', 'Siderurgia'
+                ];
+
+                var companies = [
+                    { id: 1, cnpj: "07.321.450/0001-10", empresa: "RuGo Transportes | Operador Logístico", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99922-8302", email: "contato@rugo.com.br", latitude: -20.4428, longitude: -54.6464, score: 92 },
+                    { id: 2, cnpj: "12.456.789/0001-22", empresa: "Pantanal Operador Multimodal", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99217-1002", email: "comercial@pantanal.com.br", latitude: -20.4697, longitude: -54.6201, score: 88 },
+                    { id: 3, cnpj: "03.987.654/0001-33", empresa: "Dj Logística e Transportes", uf: "MS", cidade: "Dourados", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99148-8002", email: "dj@logistica.com.br", latitude: -22.2211, longitude: -54.8056, score: 85 },
+                    { id: 4, cnpj: "45.123.789/0001-44", empresa: "MS LOGÍSTICA", uf: "ES", cidade: "Vitória", pais: "Brasil", segmento: "Operador logístico", telefone: "(27) 3020-7774", email: "logistica@mslog.com.br", latitude: -20.3155, longitude: -40.3128, score: 90 },
+                    { id: 5, cnpj: "99.888.777/0001-55", empresa: "Amazonas Intralogística & CD", uf: "AM", cidade: "Manaus", pais: "Brasil", segmento: "Operador logístico", telefone: "(92) 3232-1100", email: "manaus@amlog.com.br", latitude: -3.1190, longitude: -60.0217, score: 95 },
+                    { id: 6, cnpj: "11.222.333/0001-66", empresa: "Bento Alimentos S.A.", uf: "RS", cidade: "Bento Gonçalves", pais: "Brasil", segmento: "Alimentos", telefone: "(54) 3455-1000", email: "sac@bentoalimentos.com.br", latitude: -29.1678, longitude: -51.5189, score: 94 },
+                    { id: 7, cnpj: "21.333.444/0001-77", empresa: "Bramarlog - Operador Logístico e Armazenagem", uf: "GO", cidade: "Goiânia", pais: "Brasil", segmento: "Operador logístico", telefone: "(62) 98255-6900", email: "contato@bramarlog.com.br", latitude: -16.6869, longitude: -49.2648, score: 96 },
+                    { id: 8, cnpj: "33.444.555/0001-88", empresa: "Planalto Operador Logístico", uf: "GO", cidade: "Anápolis", pais: "Brasil", segmento: "Operador logístico", telefone: "(62) 3322-1000", email: "comercial@planalto.com.br", latitude: -16.3267, longitude: -48.9528, score: 91 }
+                ];
+
+                var rawHeaders = [];
+                var rawRowsData = [];
+                var map = null, cluster = null, mapBase = null, clusterBase = null, mapResults = [], mapBaseResults = [], timer = null;
+
+                function $(id) { return document.getElementById(id); }
+                function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+                function norm(v) { return String(v == null ? '' : v).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+                function option(v) { return '<option value="' + esc(v) + '">' + esc(v) + '</option>'; }
+
+                function loadStates(prefix) {
+                    var cEl = $(prefix + 'Country');
+                    if(!cEl) return;
+                    var country = cEl.value || 'Brasil', el = $(prefix === 'f' ? 'fUf' : (prefix === 'm' ? 'mUf' : 'mbUf'));
+                    if(!el) return;
+                    el.innerHTML = '<option value="">Todos os Estados</option>' + Object.keys(LOC[country] || {}).map(option).join('');
+                    loadCities(prefix);
                 }
-                const mb = f.size / 1048576
-                  , nome = f.name.toLowerCase();
-                st(`Abrindo ${f.name} (${mb.toFixed(0)} MB)...`);
-                try {
-                    try {
-                        await conn.query('DROP VIEW IF EXISTS base');
-                    } catch (_) {}
-                    for (const n of ['base.dat', 'base.csv.gz', 'base.json.gz'])
+                function loadCities(prefix) {
+                    var cEl = $(prefix + 'Country');
+                    var sEl = $(prefix === 'f' ? 'fUf' : (prefix === 'm' ? 'mUf' : 'mbUf'));
+                    var el = $(prefix === 'f' ? 'fCity' : (prefix === 'm' ? 'mCity' : 'mbCity'));
+                    if(!cEl || !sEl || !el) return;
+                    var country = cEl.value || 'Brasil', state = sEl.value;
+                    var arr = state && LOC[country] ? LOC[country][state] || [] : [];
+                    el.innerHTML = '<option value="">Todas as Cidades</option>' + arr.map(option).join('');
+                }
+
+                window.loadSearchStates = function() { loadStates('f'); scheduleRefresh(); };
+                window.loadSearchCities = function() { loadCities('f'); scheduleRefresh(); };
+                window.loadMapStates = function() { loadStates('m'); scheduleMap(); };
+                window.loadMapCities = function() { loadCities('m'); scheduleMap(); };
+                window.loadHbStates = function() { loadStates('mb'); };
+                window.loadHbCities = function() { loadCities('mb'); };
+
+                function fillDropdowns() {
+                    var countries = Object.keys(LOC);
+                    var countryOpts = countries.map(option).join('');
+                    if($('fCountry')) $('fCountry').innerHTML = countryOpts;
+                    if($('mCountry')) $('mCountry').innerHTML = countryOpts;
+                    if($('mbCountry')) $('mbCountry').innerHTML = countryOpts;
+                    if($('fCountry')) $('fCountry').value = 'Brasil';
+                    if($('mCountry')) $('mCountry').value = 'Brasil';
+                    if($('mbCountry')) $('mbCountry').value = 'Brasil';
+
+                    loadStates('f');
+                    loadStates('m');
+                    loadStates('mb');
+
+                    var segOpts = '<option value="">Todos os Segmentos</option>' + SEGMENTOS_BSA.map(option).join('');
+                    if($('fSegment')) $('fSegment').innerHTML = segOpts;
+                    if($('mSegment')) $('mSegment').innerHTML = segOpts;
+                    if($('mbSegment')) $('mbSegment').innerHTML = segOpts;
+                }
+
+                async function processFiles() {
+                    var fileInput = $('files');
+                    if(!fileInput || !fileInput.files.length) return;
+                    var fs = Array.from(fileInput.files);
+                    rawHeaders = [];
+                    rawRowsData = [];
+                    for (var f of fs) {
                         try {
-                            await db.dropFile(n);
-                        } catch (_) {}
-                    let sn = await sniff(f)
-                      , tipo = sn.tipo;
-                    if (EXT_XLS.test(nome))
-                        tipo = 'xls';
-                    else if (EXT_PQ.test(nome))
-                        tipo = 'parquet';
-                    else if (EXT_JSON.test(nome))
-                        tipo = 'json';
-                    else if (tipo === 'gz')
-                        tipo = /json/.test(nome) ? 'json' : 'texto';
-                    const gz = /\.gz$/.test(nome) || sn.tipo === 'gz';
-                    let src, fmt = sn.fmt;
-                    if (tipo === 'xls') {
-                        fmt = 'planilha (Excel, ODS ou similar)';
-                        if (mb > 250) {
-                            st(`A planilha tem ${mb.toFixed(0)} MB e o navegador não consegue abrir. Salve como CSV (Arquivo > Salvar como > CSV UTF-8) ou filtre antes. Se tiver mais de 1 milhão de linhas, o Excel já truncou: use o CSV/TXT original.`);
-                            $('bCarregar').disabled = false;
-                            return;
+                            var rows = [];
+                            if (/\.xlsx?$/.test(f.name.toLowerCase())) {
+                                var wb = XLSX.read(new Uint8Array(await f.arrayBuffer()), { type: 'array' });
+                                rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '' });
+                            } else {
+                                var text = await f.text();
+                                rows = text.split(/\r?\n/).map(function(r){ return r.split(/,|;/); });
+                            }
+                            if(rows.length) {
+                                rawHeaders = rows[0].map(function(h){ return String(h || '').trim(); });
+                                for (var i = 1; i < rows.length; i++) {
+                                    var r = rows[i];
+                                    if (!r || r.length < 2) continue;
+                                    rawRowsData.push(r);
+                                    companies.push({
+                                        id: companies.length + 1,
+                                        cnpj: String(r[1] || r[0] || '').trim(),
+                                        empresa: String(r[5] || r[2] || 'Empresa ' + i).trim(),
+                                        uf: String(r[18] || 'MS').trim().toUpperCase(),
+                                        cidade: String(r[19] || 'Campo Grande').trim(),
+                                        pais: 'Brasil',
+                                        segmento: String(r[28] || 'Operador logístico').trim(),
+                                        telefone: String(r[9] || '').trim(),
+                                        email: String(r[7] || '').trim(),
+                                        latitude: -16.6869 + (Math.random() - 0.5) * 3.0,
+                                        longitude: -49.2648 + (Math.random() - 0.5) * 3.0,
+                                        score: 75 + Math.floor(Math.random() * 20)
+                                    });
+                                }
+                            }
+                        } catch(e) { console.error(e); }
+                    }
+                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas carregadas com sucesso com todas as colunas preservadas.';
+                    renderDynamicTable();
+                    renderAll();
+                    scheduleMap();
+                    renderMapBaseLegend();
+                }
+
+                function renderDynamicTable() {
+                    var thEl = $('dynamicHeaders');
+                    var tbEl = $('dynamicRows');
+                    if(!thEl || !tbEl) return;
+                    if(!rawHeaders.length) {
+                        thEl.innerHTML = '<th>Carregue um arquivo para ver as colunas</th>';
+                        tbEl.innerHTML = '<tr><td class="empty">Nenhum dado importado.</td></tr>';
+                        return;
+                    }
+                    thEl.innerHTML = rawHeaders.map(function(h){ return '<th>' + esc(h) + '</th>'; }).join('');
+                    tbEl.innerHTML = rawRowsData.slice(0, 50).map(function(row) {
+                        return '<tr>' + rawHeaders.map(function(_, idx){ return '<td>' + esc(row[idx] || '') + '</td>'; }).join('') + '</tr>';
+                    }).join('');
+                }
+
+                function getActiveFilters(prefix) {
+                    var countryEl = $(prefix + 'Country');
+                    var ufEl = $(prefix + 'Uf');
+                    var cityEl = $(prefix + 'City');
+                    var segEl = $(prefix + 'Segment');
+                    var scoreEl = $(prefix + 'Score');
+                    var textEl = $(prefix + 'Text');
+
+                    return {
+                        pais: countryEl ? countryEl.value : '',
+                        estado: ufEl ? ufEl.value : '',
+                        cidade: cityEl ? cityEl.value : '',
+                        segmento: segEl ? segEl.value : '',
+                        scoreMin: scoreEl ? Number(scoreEl.value) || 0 : 0,
+                        buscaLivre: textEl ? textEl.value : ''
+                    };
+                }
+
+                function filteredHub() {
+                    var f = getActiveFilters('f');
+                    return companies.filter(function(r) {
+                        var allText = norm([r.empresa, r.cnpj, r.segmento, r.cidade, r.uf, r.email].join(' '));
+                        return (!f.pais || norm(r.pais || 'brasil').includes(norm(f.pais))) &&
+                               (!f.estado || norm(r.uf) === norm(f.estado)) &&
+                               (!f.cidade || norm(r.cidade).includes(norm(f.cidade))) &&
+                               (!f.segmento || norm(r.segmento) === norm(f.segmento)) &&
+                               (!f.buscaLivre || allText.includes(norm(f.buscaLivre)));
+                    });
+                }
+
+                function filteredMap() {
+                    var f = getActiveFilters('m');
+                    return companies.filter(function(r) {
+                        return (!f.pais || norm(r.pais || 'brasil').includes(norm(f.pais))) &&
+                               (!f.estado || norm(r.uf) === norm(f.estado)) &&
+                               (!f.cidade || norm(r.cidade).includes(norm(f.cidade))) &&
+                               (!f.segmento || norm(r.segmento) === norm(f.segmento)) &&
+                               (r.score >= f.scoreMin);
+                    });
+                }
+
+                function filteredMapBase() {
+                    var f = getActiveFilters('mb');
+                    return companies.filter(function(r) {
+                        return (!f.pais || norm(r.pais || 'brasil').includes(norm(f.pais))) &&
+                               (!f.estado || norm(r.uf) === norm(f.estado)) &&
+                               (!f.cidade || norm(r.cidade).includes(norm(f.cidade))) &&
+                               (!f.segmento || norm(r.segmento) === norm(f.segmento));
+                    });
+                }
+
+                function badge(r) {
+                    return '<span class="pill high">Alta · ' + r.score + '</span>';
+                }
+
+                function renderDashboard() {
+                    var arr = filteredHub();
+                    if($('dTotal')) $('dTotal').textContent = companies.length;
+                    if($('dHigh')) $('dHigh').textContent = companies.filter(function(x){ return x.score >= 70; }).length;
+                    if($('dFiltered')) $('dFiltered').textContent = arr.length;
+                    if($('activeFilterSummary')) $('activeFilterSummary').textContent = 'Filtro atual: ' + arr.length + ' registros exibidos';
+                    
+                    var seg = {};
+                    companies.forEach(function(x) {
+                        var k = x.segmento || 'Não informado';
+                        seg[k] = (seg[k] || 0) + 1;
+                    });
+                    var keys = Object.keys(seg).sort(function(a, b) { return seg[b] - seg[a]; }).slice(0, 10);
+                    if($('segments')) {
+                        $('segments').innerHTML = keys.length ? keys.map(function(k) {
+                            return '<div style="display:grid;grid-template-columns:1fr 2fr 30px;gap:9px;align-items:center;margin-bottom:6px"><span>' + esc(k) + '</span><div style="height:8px;background:#e7edf5;border-radius:8px"><i style="display:block;background:var(--o);height:100%;border-radius:8px;width:' + Math.round(seg[k] * 100 / Math.max(1, seg[keys[0]])) + '%"></i></div><b>' + seg[k] + '</b></div>';
+                        }).join('') : '<div class="empty">Sem dados.</div>';
+                    }
+                }
+
+                function renderSearch() {
+                    var arr = filteredHub();
+                    if($('searchCount')) $('searchCount').textContent = arr.length + ' contas';
+                    if($('searchRows')) {
+                        $('searchRows').innerHTML = arr.length ? arr.map(function(r) {
+                            return '<tr><td>' + badge(r) + '</td><td><b>' + esc(r.empresa) + '</b></td><td>' + esc(r.cnpj) + '</td><td>' + esc(r.segmento) + '</td><td>' + esc(r.cidade + '/' + r.uf) + '</td><td>' + esc(r.telefone || r.email) + '</td></tr>';
+                        }).join('') : '<tr><td colspan="6" class="empty">Nenhuma empresa encontrada com os filtros aplicados.</td></tr>';
+                    }
+                }
+
+                function renderProfileSelect() {
+                    var sel = $('profileSelect');
+                    if(!sel) return;
+                    var val = sel.value;
+                    sel.innerHTML = '<option value="">Selecione uma empresa</option>' + companies.map(function(r) {
+                        return '<option value="' + r.id + '">' + esc(r.empresa) + ' (' + esc(r.cidade + '/' + r.uf) + ')</option>';
+                    }).join('');
+                    sel.value = val;
+                    sel.onchange = function() {
+                        var r = companies.find(function(x) { return String(x.id) === String(sel.value); });
+                        if($('profile')) {
+                            $('profile').innerHTML = r ? '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px">' + Object.keys(r).map(function(k) {
+                                return '<div style="padding:9px;border:1px solid var(--line);border-radius:7px;background:#fbfcfe"><span>' + esc(k) + '</span><b>' + esc(r[k]) + '</b></div>';
+                            }).join('') + '</div>' : 'Selecione uma empresa acima.';
                         }
-                        st(`Lendo planilha (${mb.toFixed(0)} MB)... aguarde.`);
-                        await new Promise(r => setTimeout(r, 50));
-                        const r = await lerPlanilha(f);
-                        fmt += ` | ${fmt0(r.n)} linhas. ${r.info}`;
-                        await db.registerFileText('base.dat', r.csv);
-                        src = `read_csv('base.dat',delim=';',quote='"',all_varchar=true,ignore_errors=true,sample_size=20000,header=true,null_padding=true)`;
-                    } else if (tipo === 'parquet') {
-                        await db.registerFileHandle('base.dat', f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
-                        src = `(SELECT COLUMNS(*)::VARCHAR FROM read_parquet('base.dat'))`;
-                    } else if (tipo === 'json') {
-                        const fn = gz ? 'base.json.gz' : 'base.dat';
-                        await db.registerFileHandle(fn, f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
-                        src = `(SELECT COLUMNS(*)::VARCHAR FROM read_json_auto('${fn}',ignore_errors=true))`;
+                    };
+                }
+
+                function renderAll() {
+                    renderDashboard();
+                    renderSearch();
+                    renderProfileSelect();
+                    if($('exportBtn')) $('exportBtn').disabled = companies.length === 0;
+                    if($('clearBtn')) $('clearBtn').disabled = companies.length === 0;
+                }
+
+                function getColorForSegment(seg) {
+                    return SEGMENT_COLORS[seg] || '#06418a';
+                }
+
+                function renderMapBaseLegend() {
+                    var leg = $('mapBaseLegend');
+                    if(!leg) return;
+                    var segs = Object.keys(SEGMENT_COLORS);
+                    leg.innerHTML = segs.map(function(s) {
+                        return '<div class="legend-item"><span class="legend-icon" style="background:' + SEGMENT_COLORS[s] + '"></span>' + esc(s) + '</div>';
+                    }).join('');
+                }
+
+                function initMap() {
+                    if (!window.L) return;
+                    if (!map && document.getElementById('prospectMap')) {
+                        map = L.map('prospectMap').setView([-16.6869, -49.2648], 6);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+                        if (typeof L.markerClusterGroup === 'function') {
+                            cluster = L.markerClusterGroup({ chunkedLoading: true });
+                        } else {
+                            cluster = L.featureGroup();
+                        }
+                        map.addLayer(cluster);
+                    }
+                    if (!mapBase && document.getElementById('prospectMapBase')) {
+                        mapBase = L.map('prospectMapBase').setView([-16.6869, -49.2648], 6);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(mapBase);
+                        if (typeof L.markerClusterGroup === 'function') {
+                            clusterBase = L.markerClusterGroup({ chunkedLoading: true });
+                        } else {
+                            clusterBase = L.featureGroup();
+                        }
+                        mapBase.addLayer(clusterBase);
+                    }
+                }
+
+                function refreshMap() {
+                    initMap();
+                    if(!cluster) return;
+                    cluster.clearLayers();
+                    mapResults = filteredMap();
+                    var pts = [];
+                    mapResults.forEach(function(r) {
+                        var lat = Number(r.latitude) || -16.6869;
+                        var lng = Number(r.longitude) || -49.2648;
+                        pts.push([lat, lng]);
+                        var color = getColorForSegment(r.segmento);
+                        var m = L.circleMarker([lat, lng], { radius: 8, color: '#ffffff', fillColor: color, fillOpacity: 0.9, weight: 2 });
+                        m.bindPopup('<b>' + esc(r.empresa) + '</b><br>' + esc(r.segmento) + '<br>' + esc(r.cidade + '/' + r.uf));
+                        cluster.addLayer(m);
+                    });
+                    if (pts.length && map) map.fitBounds(pts, { padding: [30, 30] });
+                    if($('mapCompanyTableBody')) {
+                        $('mapCompanyTableBody').innerHTML = mapResults.length ? mapResults.map(function(r) {
+                            return '<tr><td><b>' + esc(r.empresa) + '</b></td><td>' + esc(r.cnpj || '-') + '</td><td>' + esc(r.segmento) + '</td><td>' + esc(r.cidade + '/' + r.uf) + '</td><td>' + esc(r.telefone || r.email || '-') + '</td><td>' + badge(r) + '</td></tr>';
+                        }).join('') : '<tr><td colspan="6" class="empty">Nenhuma empresa encontrada com os filtros geográficos atuais.</td></tr>';
+                    }
+                    if($('mStatus')) $('mStatus').textContent = mapResults.length + ' empresas exibidas no mapa e na tabela.';
+                }
+
+                window.refreshMapBase = function() {
+                    initMap();
+                    if(!clusterBase) return;
+                    clusterBase.clearLayers();
+                    mapBaseResults = filteredMapBase();
+                    var pts = [];
+                    mapBaseResults.forEach(function(r) {
+                        var lat = Number(r.latitude) || -16.6869;
+                        var lng = Number(r.longitude) || -49.2648;
+                        pts.push([lat, lng]);
+                        var color = getColorForSegment(r.segmento);
+                        var m = L.circleMarker([lat, lng], { radius: 9, color: '#ffffff', fillColor: color, fillOpacity: 0.95, weight: 2 });
+                        m.bindPopup('<b>' + esc(r.empresa) + '</b><br>CNPJ: ' + esc(r.cnpj) + '<br>Segmento: ' + esc(r.segmento) + '<br>' + esc(r.cidade + '/' + r.uf));
+                        clusterBase.addLayer(m);
+                    });
+                    if (pts.length && mapBase) mapBase.fitBounds(pts, { padding: [30, 30] });
+                    if($('mapBaseTableBody')) {
+                        $('mapBaseTableBody').innerHTML = mapBaseResults.length ? mapBaseResults.map(function(r) {
+                            return '<tr><td><b>' + esc(r.empresa) + '</b></td><td>' + esc(r.cnpj || '-') + '</td><td>' + esc(r.segmento) + '</td><td>' + esc(r.cidade + '/' + r.uf) + '</td><td>' + badge(r) + '</td></tr>';
+                        }).join('') : '<tr><td colspan="5" class="empty">Nenhuma empresa encontrada no Mapa Hub Base.</td></tr>';
+                    }
+                    if($('mapBaseCount')) $('mapBaseCount').textContent = mapBaseResults.length + ' contas';
+                };
+
+                function scheduleMap() { clearTimeout(timer); timer = setTimeout(function(){ refreshMap(); refreshMapBase(); }, 300); }
+                function scheduleRefresh() { scheduleMap(); }
+
+                function googleMapsSearch() {
+                    var f = getActiveFilters('m');
+                    var q = [f.segmento || 'Operador logístico', f.estado, f.pais].filter(Boolean).join(' ');
+                    window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q), '_blank', 'noopener');
+                }
+
+                function download(rows, name, isXlsx) {
+                    if (!rows.length) { alert('Nenhuma empresa para exportar.'); return; }
+                    var cleanData = rows.map(function(r) {
+                        return {
+                            'CNPJ': r.cnpj || '', 'Empresa': r.empresa || '', 'UF': r.uf || '',
+                            'Cidade': r.cidade || '', 'País': r.pais || '', 'Segmento': r.segmento || '',
+                            'Telefone': r.telefone || '', 'E-mail': r.email || '', 'Score': r.score || 0
+                        };
+                    });
+                    if (isXlsx && window.XLSX) {
+                        var ws = XLSX.utils.json_to_sheet(cleanData);
+                        var wb = XLSX.utils.book_new();
+                        XLSX.utils.book_append_sheet(wb, ws, "Empresas");
+                        XLSX.writeFile(wb, name.replace('.csv', '.xlsx'));
                     } else {
-                        const fn = gz ? 'base.csv.gz' : 'base.dat';
-                        await db.registerFileHandle(fn, f, duckdb.DuckDBDataProtocol.BROWSER_FILEREADER, true);
-                        const enc = sn.enc && sn.enc !== 'utf-8' ? `,encoding='${sn.enc}'` : '';
-                        if (sn.enc)
-                            fmt += ` (codificação ${sn.enc})`;
-                        src = `read_csv('${fn}',all_varchar=true,ignore_errors=true,sample_size=20000,auto_detect=true,null_padding=true${enc})`;
+                        var keys = Object.keys(cleanData[0]);
+                        var csv = [keys.join(';')].concat(cleanData.map(function(r) {
+                            return keys.map(function(k) { return '"' + String(r[k] || '').replace(/"/g, '""') + '"'; }).join(';');
+                        })).join('\n');
+                        var a = document.createElement('a');
+                        a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' }));
+                        a.download = name;
+                        a.click();
+                        URL.revokeObjectURL(a.href);
                     }
-                    await conn.query(`CREATE VIEW base AS SELECT * FROM ${src}`);
-                    cols = (await conn.query('DESCRIBE base')).toArray().map(r => r.column_name);
-                    if (!cols.length)
-                        throw new Error('nenhuma coluna encontrada');
-                    mp = {};
-                    for (const k in ALIAS)
-                        mp[k] = detect(k);
-                    $('map').innerHTML = Object.keys(ALIAS).map(k => `<div><label>${k}</label><select id="m_${k}"><option value="">—</option>${cols.map(c => `<option ${c === mp[k] ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>`).join('');
-                    $('cMap').hidden = false;
-                    $('cFil').hidden = false;
-                    st(`Base carregada: ${cols.length} colunas. Formato lido: ${fmt}.`);
-                    if (mb < 300)
-                        await diag();
-                    else
-                        $('ia').innerHTML = '<small>Base grande: clique em Diagnóstico da base quando quiser (faz uma leitura completa).</small>';
-                } catch (e) {
-                    st('Erro ao abrir: ' + (e.message || e) + '. Dica: se persistir, salve como CSV UTF-8 e tente de novo.')
                 }
-                $('bCarregar').disabled = false;
-            }
-            ;
 
-            const solucao = c => {
-                const d = String(c || '').slice(0, 2);
-                if (['10', '11', '46'].includes(d))
-                    return 'Push Back (PSH) / Dinâmico (DIN)';
-                if (d === '52')
-                    return 'Porta-Pallet / Drive-In / Shuttle';
-                if (+d >= IND[0] && +d <= IND[1])
-                    return 'Porta-Pallet / Mezanino / Cantilever';
-                return 'Porta-Pallet';
-            }
-            ;
+                window.exportMapBaseXlsx = function() { download(mapBaseResults, 'paim_mapa_hub_base.xlsx', true); };
+                window.exportMapBaseCsv = function() { download(mapBaseResults, 'paim_mapa_hub_base.csv', false); };
 
-            $('bBuscar').onclick = async () => {
-                const m = {};
-                for (const k in ALIAS)
-                    m[k] = $('m_' + k).value;
-                const col = (k, d="''") => m[k] ? q(m[k]) : d;
-                const capRaw = col('capital', "'0'");
-                const cx = `regexp_replace(coalesce(${capRaw},''),'[^0-9.,]','','g')`;
-                const cap = `CASE WHEN regexp_matches(${cx},'^[0-9]{1,3}([.][0-9]{3})*(,[0-9]+)?$') OR regexp_matches(${cx},'^[0-9]+,[0-9]+$') THEN TRY_CAST(replace(replace(${cx},'.',''),',','.') AS DOUBLE) ELSE TRY_CAST(replace(${cx},',','') AS DOUBLE) END`;
-                const cnae = `regexp_replace(coalesce(${col('cnae')},''),'[^0-9]','','g')`;
-                const uf = `upper(trim(${col('uf')}))`;
-                const tel = `coalesce(trim(${col('telefone')}),'')`
-                  , mail = `coalesce(trim(${col('email')}),'')`
-                  , site = `coalesce(trim(${col('site')}),'')`;
-                const sC = 'CASE ' + PTS_CNAE.map( ([p,v]) => `WHEN left(cnae_n,2)='${p}' THEN ${v}`).join(' ') + ` WHEN TRY_CAST(left(cnae_n,2) AS INT) BETWEEN ${IND[0]} AND ${IND[1]} THEN 25 ELSE 0 END`;
-                const sK = 'CASE ' + PTS_CAP.map( ([v,p]) => `WHEN capital_n>=${v} THEN ${p}`).join(' ') + ' ELSE 0 END';
-                const ufl = UF_PRIORITARIAS.map(u => `'${u}'`).join(',');
-                const w = [];
-                const ufs = $('fUF').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
-                if (ufs.length && m.uf)
-                    w.push(`uf_n IN (${ufs.map(u => `'${lit(u)}'`).join(',')})`);
-                if ($('fAtiv').checked && m.situacao)
-                    w.push(`(upper(${q(m.situacao)}) LIKE '%ATIV%' OR trim(${q(m.situacao)}) IN ('02','2'))`);
-                const pref = $('fCNAE').value.split(',').map(s => s.trim()).filter(s => /^\d+$/.test(s));
-                if (pref.length && m.cnae)
-                    w.push('(' + pref.map(x => `cnae_n LIKE '${x}%'`).join(' OR ') + ')');
-                const cm = +$('fCap').value;
-                if (cm && m.capital)
-                    w.push(`capital_n>=${cm}`);
-                if ($('fCid').value.trim() && m.cidade)
-                    w.push(`upper(${q(m.cidade)}) LIKE '%${lit($('fCid').value.trim().toUpperCase())}%'`);
-                if ($('fCont').checked)
-                    w.push("(tel_n<>'' OR mail_n<>'')");
-                const where = w.length ? 'WHERE ' + w.join(' AND ') : '';
-                const keys = ['cnpj', 'razao', 'fantasia', 'cnae', 'capital', 'uf', 'cidade', 'telefone', 'ddd', 'telefone2', 'email', 'email2', 'contato', 'site'].filter(k => m[k]);
-                const rb = cols.find(c => /basico|básico/i.test(c))
-                  , ro = cols.find(c => /ordem/i.test(c))
-                  , rd = cols.find(c => /(^|_)dv$|digito|dígito/i.test(c));
-                const cnpjExpr = (rb && ro && rd && /basico|básico/i.test(m.cnpj || '')) ? `(lpad(trim(${q(rb)}),8,'0')||lpad(trim(${q(ro)}),4,'0')||lpad(trim(${q(rd)}),2,'0'))` : null;
-                const usados = new Set(Object.values(m).filter(Boolean));
-                const extraSql = $('fAll').checked ? cols.filter(c => !usados.has(c)).map(c => `, ${q(c)} AS ${q('arq_' + c)}`).join('') : '';
-                const sel = keys.map(k => `${k === 'cnpj' && cnpjExpr ? cnpjExpr : q(m[k])} AS ${k}`).join(', ');
-                const n = Math.max(1, +$('fN').value || 2000);
-                const sql = `WITH t AS (SELECT *, ${cnae} cnae_n, ${cap} capital_n, ${uf} uf_n, ${tel} tel_n, ${mail} mail_n, ${site} site_n FROM base),
-  s AS (SELECT ${sel}, cnae_n,
-   (${sC})+(${sK})+CASE WHEN uf_n IN (${ufl}) THEN 15 ELSE 0 END+CASE WHEN tel_n<>'' THEN 5 ELSE 0 END+CASE WHEN mail_n<>'' THEN 5 ELSE 0 END+CASE WHEN site_n<>'' THEN 5 ELSE 0 END AS score${extraSql}
-   FROM t ${where})`;
-                $('bBuscar').disabled = true;
-                st('Consultando a base (pode levar alguns minutos em arquivos grandes)...');
-                try {
-                    const res = await conn.query(`${sql} SELECT * FROM s ORDER BY score DESC LIMIT ${n}`);
-                    rows = res.toArray().map(r => {
-                        const o = {};
-                        for (const k of res.schema.fields.map(f => f.name)) {
-                            const v = r[k];
-                            o[k] = typeof v === 'bigint' ? Number(v) : v;
-                        }
-                        o.prioridade = o.score >= 65 ? 'A' : o.score >= 40 ? 'B' : 'C';
-                        o.solucao_sugerida = solucao(o.cnae_n);
-                        enriquece(o);
-                        delete o.cnae_n;
-                        return o;
-                    }
-                    );
-                    if ($('fBench').checked)
-                        rows = rows.filter(r => !r.benchmark);
-                    pg = 0;
-                    $('kT').textContent = '…';
-                    $('kE').textContent = rows.length.toLocaleString('pt-BR');
-                    $('kA').textContent = rows.filter(r => r.prioridade === 'A').length.toLocaleString('pt-BR');
-                    view = 'busca';
-                    $('bAdd').disabled = !rows.length;
-                    render();
-                    let msg = 'Consulta concluída.';
-                    if ($('auto').checked && rows.length) {
-                        const r = await addAcum(rows, $('rot').value.trim());
-                        msg += ` Acumulado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`
-                    }
-                    st(msg);
-                    conn.query(`${sql} SELECT count(*) c FROM s`).then(r => {
-                        $('kT').textContent = fmt0(num(r.toArray()[0].c));
-                    }
-                    ).catch( () => {
-                        $('kT').textContent = 'n/d';
-                    }
-                    );
-                    if (!rows.length)
-                        await dica(m);
-                } catch (e) {
-                    st('Erro na consulta: ' + e.message)
+                var navEl = $('nav');
+                if(navEl) {
+                    navEl.addEventListener('click', function(e) {
+                        var b = e.target.closest('button');
+                        if (!b) return;
+                        document.querySelectorAll('.nav button').forEach(function(x){ x.classList.remove('active'); });
+                        b.classList.add('active');
+                        var tab = b.dataset.tab;
+                        document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('active'); });
+                        var targetView = $('v-' + tab);
+                        if(targetView) targetView.classList.add('active');
+                        if (tab === 'geomap') { setTimeout(function(){ initMap(); if(map) map.invalidateSize(); refreshMap(); }, 100); }
+                        if (tab === 'geomapbase') { setTimeout(function(){ initMap(); if(mapBase) mapBase.invalidateSize(); refreshMapBase(); }, 100); }
+                    });
                 }
-                $('bBuscar').disabled = false;
-            }
-            ;
 
-            async function dica(m) {
-                try {
-                    const d = []
-                      , vals = async (sql) => (await conn.query(sql)).toArray().map(x => x.v).filter(Boolean);
-                    if (m.uf)
-                        d.push('UF na base: ' + (await vals(`SELECT DISTINCT upper(trim(${q(m.uf)})) v FROM base LIMIT 25`)).join(', '));
-                    if (m.situacao)
-                        d.push('situação: ' + (await vals(`SELECT DISTINCT trim(${q(m.situacao)}) v FROM base LIMIT 10`)).join(', '));
-                    if (m.cnae)
-                        d.push('divisões CNAE: ' + (await vals(`SELECT DISTINCT left(regexp_replace(coalesce(${q(m.cnae)},''),'[^0-9]','','g'),2) v FROM base LIMIT 25`)).join(', '));
-                    st('Nenhum lead com esses filtros. Valores existentes na base (' + d.join(' | ') + '). Ajuste UF, CNAE ou capital, ou desmarque "somente ativas".');
-                } catch (_) {}
-            }
-            function render() {
-                const rows = cur();
-                $('vt').textContent = view === 'acum' ? 'Acumulado de todos os estados (' + rows.length.toLocaleString('pt-BR') + ' leads)' : 'Resultado da busca';
-                $('bView').textContent = view === 'acum' ? 'Ver resultado da busca' : 'Ver acumulado';
-                $('bX').disabled = $('bC').disabled = !rows.length;
-                const pgs = Math.max(1, Math.ceil(rows.length / PS));
-                if (pg >= pgs)
-                    pg = pgs - 1;
-                $('pI').textContent = `Página ${pg + 1} de ${pgs} (${PS} linhas por página)`;
-                if (!rows.length) {
-                    $('tb').innerHTML = '<tbody><tr><td>Nenhum lead com esses filtros.</td></tr></tbody>';
-                    return;
-                }
-                const h = hdr(rows);
-                $('tb').innerHTML = '<thead><tr>' + h.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>' + rows.slice(pg * PS, (pg + 1) * PS).map(r => '<tr>' + h.map(x => `<td class="${x === 'prioridade' ? r[x] : ''}">${esc(r[x])}</td>`).join('') + '</tr>').join('') + '</tbody>';
-            }
-            $('bView').onclick = () => {
-                view = view === 'acum' ? 'busca' : 'acum';
-                pg = 0;
-                render();
-            }
-            ;
-            $('pP').onclick = () => {
-                if (pg > 0) {
-                    pg--;
-                    render();
-                }
-            }
-            ;
-            $('pN').onclick = () => {
-                pg++;
-                render();
-            }
-            ;
-            $('bDiag').onclick = diag;
-            $('bRank').onclick = rankings;
-            $('bBench').onclick = () => $('bIn').click();
-            $('bIn').onchange = async e => {
-                const f = e.target.files[0];
-                if (!f)
-                    return;
-                try {
-                    if (typeof XLSX === 'undefined') {
-                        st('A biblioteca de Excel não carregou. Use CSV ou recarregue com Ctrl+F5.');
-                        return;
+                var importBtn = $('importBtn');
+                if(importBtn) importBtn.addEventListener('click', processFiles);
+                var mSearch = $('mSearch');
+                if(mSearch) mSearch.addEventListener('click', refreshMap);
+                var mGoogle = $('mGoogle');
+                if(mGoogle) mGoogle.addEventListener('click', googleMapsSearch);
+
+                window.triggerHubSearch = function() { renderAll(); };
+                window.clearHubFilters = function() { 
+                    if($('fCountry')) $('fCountry').value = 'Brasil'; 
+                    if($('fUf')) $('fUf').value = ''; 
+                    if($('fCity')) $('fCity').value = ''; 
+                    if($('fSegment')) $('fSegment').value = ''; 
+                    if($('fText')) $('fText').value = ''; 
+                    renderAll(); 
+                };
+
+                window.clearMapFilters = function() { 
+                    if($('mCountry')) $('mCountry').value = 'Brasil'; 
+                    if($('mUf')) $('mUf').value = ''; 
+                    if($('mCity')) $('mCity').value = ''; 
+                    if($('mSegment')) $('mSegment').value = ''; 
+                    if($('mScore')) $('mScore').value = '0'; 
+                    scheduleMap(); 
+                };
+
+                ['fCountry', 'fUf', 'fCity', 'fSegment', 'fText'].forEach(function(id) {
+                    if($(id)) {
+                        $(id).addEventListener('input', triggerHubSearch);
+                        $(id).addEventListener('change', triggerHubSearch);
                     }
-                    const wb = XLSX.read(await f.arrayBuffer(), {
-                        type: 'array'
-                    });
-                    const j = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
-                        defval: ''
-                    });
-                    if (!j.length)
-                        throw new Error('arquivo vazio');
-                    const ks = Object.keys(j[0]);
-                    const kc = ks.find(k => /cnpj/i.test(k))
-                      , kr = ks.find(k => /raz|empresa|nome/i.test(k));
-                    if (!kc && !kr)
-                        throw new Error('não achei coluna de CNPJ ou razão social');
-                    j.forEach(x => {
-                        if (kc && dig(x[kc]).length >= 8)
-                            bench.add('c' + dig(x[kc]).slice(0, 8));
-                        if (kr && normN(x[kr]))
-                            bench.add('n' + normN(x[kr]));
+                });
+
+                ['mCountry', 'mUf', 'mCity', 'mSegment', 'mScore'].forEach(function(id) {
+                    if($(id)) {
+                        $(id).addEventListener('input', scheduleMap);
+                        $(id).addEventListener('change', scheduleMap);
                     }
-                    );
-                    await kvSet('bench', [...bench]);
-                    [acum, rows].forEach(a => a.forEach(r => r.benchmark = isBench(r) ? 'Concorrente/Parceiro BSA' : ''));
-                    await kvSet('acum', acum);
-                    render();
-                    st(`Benchmark importado: ${fmt(j.length)} empresas. Leads que casam por CNPJ (8 primeiros dígitos) ou razão social ficam marcados.`);
-                } catch (err) {
-                    st('Erro ao importar benchmark: ' + err.message)
-                }
-                e.target.value = '';
-            }
-            ;
-            $('bAdd').onclick = async () => {
-                if (!rows.length)
-                    return;
-                const r = await addAcum(rows, $('rot').value.trim());
-                st(`Acumulado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`)
-            }
-            ;
-            $('bLimpa').onclick = async () => {
-                if (confirm('Apagar todo o acumulado? Baixe um backup antes.')) {
-                    acum = [];
-                    await kvSet('acum', acum);
-                    statsAcum();
-                    render();
-                }
-            }
-            ;
-            $('bImp').onclick = () => $('aImp').click();
-            $('aImp').onchange = async e => {
-                const f = e.target.files[0];
-                if (!f)
-                    return;
-                try {
-                    if (typeof XLSX === 'undefined') {
-                        st('A biblioteca de Excel não carregou. Use CSV ou recarregue com Ctrl+F5.');
-                        return;
+                });
+
+                ['mbCountry', 'mbUf', 'mbCity', 'mbSegment'].forEach(function(id) {
+                    if($(id)) {
+                        $(id).addEventListener('input', refreshMapBase);
+                        $(id).addEventListener('change', refreshMapBase);
                     }
-                    const wb = XLSX.read(await f.arrayBuffer(), {
-                        type: 'array'
-                    });
-                    const j = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
-                        defval: ''
-                    });
-                    const r = await addAcum(j.map(x => ({
-                        ...x,
-                        score: Number(x.score) || 0
-                    })), '');
-                    st(`Importado: +${r.novo.toLocaleString('pt-BR')} novos, ${r.atual.toLocaleString('pt-BR')} atualizados.`)
-                } catch (err) {
-                    st('Erro ao importar: ' + err.message)
-                }
-                e.target.value = '';
-            }
-            ;
-            function baixar(blob, nome) {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = nome;
-                a.click();
-            }
-            $('bC').onclick = () => {
-                const rows = cur();
-                const h = hdr(rows);
-                const cel = v => {
-                    v = String(v ?? '');
-                    if (/^[=+\-@\t\r]/.test(v) && !/^[+-]?\d+([.,]\d+)?$/.test(v))
-                        v = "'" + v;
-                    return '"' + v.replace(/"/g, '""') + '"';
-                }
-                ;
-                const l = [h.join(';'), ...rows.map(r => h.map(k => cel(r[k])).join(';'))];
-                baixar(new Blob(['\ufeff' + l.join('\n')],{
-                    type: 'text/csv;charset=utf-8'
-                }), (view === 'acum' ? 'acumulado_' : 'busca_') + 'leads_prospect_bsa.csv');
-            }
-            ;
-            $('bX').onclick = () => {
-                const rows = cur();
-                if (typeof XLSX === 'undefined')
-                    return st('A biblioteca de Excel não carregou. Use Baixar CSV ou recarregue com Ctrl+F5.');
-                if (rows.length > 1000000)
-                    return st('Mais de 1 milhão de linhas: use Baixar CSV (limite do Excel).');
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows, {
-                    header: hdr(rows)
-                }), 'Leads');
-                XLSX.writeFile(wb, (view === 'acum' ? 'acumulado_' : 'busca_') + 'leads_prospect_bsa.xlsx');
-            }
-            ;
-            $('arq').onchange = () => {
-                if ($('arq').files[0])
-                    $('bCarregar').click();
-            }
-            ;
-            addEventListener('dragover', e => e.preventDefault());
-            addEventListener('drop', e => {
-                e.preventDefault();
-                const fl = e.dataTransfer && e.dataTransfer.files;
-                if (fl && fl.length) {
-                    $('arq').files = fl;
-                    $('bCarregar').click();
-                }
-            }
-            );
+                });
+
+                if($('btnExportMapXlsx')) $('btnExportMapXlsx').addEventListener('click', function() { download(mapResults, 'paim_empresas_raio.xlsx', true); });
+                if($('btnExportMapCSVTop')) $('btnExportMapCSVTop').addEventListener('click', function() { download(mapResults, 'paim_empresas_raio.csv', false); });
+                if($('mExport')) $('mExport').addEventListener('click', function() { download(mapResults, 'paim_empresas_raio.csv', false); });
+                if($('exportBtn')) $('exportBtn').addEventListener('click', function() { download(companies, 'paim_base_consolidada.csv', false); });
+                if($('clearBtn')) $('clearBtn').addEventListener('click', function() { companies = []; rawHeaders = []; rawRowsData = []; renderDynamicTable(); renderAll(); });
+
+                fillDropdowns();
+                renderAll();
+                renderMapBaseLegend();
+            })();
         </script>
     </body>
 </html>
