@@ -349,6 +349,17 @@
                     'Plásticos', 'Química', 'Têxtil', 'Construção', 'Siderurgia'
                 ];
 
+                // Coordenadas centrais aproximadas por UF para geolocalização dinâmica caso o arquivo não possua Lat/Lng
+                var UF_COORDINATES = {
+                    'AC': [-9.9749, -67.8243], 'AL': [-9.5713, -36.7820], 'AP': [0.0349, -51.0694], 'AM': [-3.1190, -60.0217],
+                    'BA': [-12.9714, -38.5014], 'CE': [-3.7172, -38.5433], 'DF': [-15.7797, -47.9297], 'ES': [-20.3155, -40.3128],
+                    'GO': [-16.6869, -49.2648], 'MA': [-2.5387, -44.2825], 'MT': [-15.6010, -56.0974], 'MS': [-20.4428, -54.6464],
+                    'MG': [-19.9208, -43.9378], 'PA': [-1.4558, -48.4902], 'PB': [-7.1150, -34.8631], 'PR': [-25.4195, -49.2646],
+                    'PE': [-8.0543, -34.8813], 'PI': [-5.0892, -42.8016], 'RJ': [-22.9068, -43.1729], 'RN': [-5.7945, -35.2110],
+                    'RS': [-30.0346, -51.2177], 'RO': [-8.7619, -63.9039], 'RR': [2.8235, -60.6758], 'SC': [-27.5954, -48.5480],
+                    'SP': [-23.5505, -46.6333], 'SE': [-10.9111, -37.0717], 'TO': [-10.1836, -48.3336]
+                };
+
                 var companies = [
                     { id: 1, cnpj: "07.321.450/0001-10", empresa: "RuGo Transportes | Operador Logístico", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99922-8302", email: "contato@rugo.com.br", latitude: -20.4428, longitude: -54.6464, score: 92 },
                     { id: 2, cnpj: "12.456.789/0001-22", empresa: "Pantanal Operador Multimodal", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99217-1002", email: "comercial@pantanal.com.br", latitude: -20.4697, longitude: -54.6201, score: 88 },
@@ -432,29 +443,54 @@
                             }
                             if(rows.length) {
                                 rawHeaders = rows[0].map(function(h){ return String(h || '').trim(); });
+
+                                // Mapeamento dinâmico inteligente dos nomes de colunas
+                                var colMap = {};
+                                rawHeaders.forEach(function(h, idx) {
+                                    var nh = norm(h);
+                                    if(nh.includes('cnpj')) colMap.cnpj = idx;
+                                    else if(nh.includes('razao') || nh.includes('empresa') || nh.includes('fantasia') || nh.includes('nome')) if(colMap.empresa === undefined) colMap.empresa = idx;
+                                    else if(nh === 'uf' || nh.includes('estado')) colMap.uf = idx;
+                                    else if(nh.includes('cidade') || nh.includes('municipio')) colMap.cidade = idx;
+                                    else if(nh.includes('segmento') || nh.includes('ramo') || nh.includes('setor') || nh.includes('cnae')) colMap.segmento = idx;
+                                    else if(nh.includes('tel') || nh.includes('fone') || nh.includes('celular')) colMap.telefone = idx;
+                                    else if(nh.includes('mail')) colMap.email = idx;
+                                    else if(nh.includes('lat')) colMap.lat = idx;
+                                    else if(nh.includes('lng') || nh.includes('lon')) colMap.lng = idx;
+                                });
+
                                 for (var i = 1; i < rows.length; i++) {
                                     var r = rows[i];
                                     if (!r || r.length < 2) continue;
                                     rawRowsData.push(r);
+
+                                    var ufVal = String((colMap.uf !== undefined ? r[colMap.uf] : r[18]) || 'SC').trim().toUpperCase();
+                                    var cityVal = String((colMap.cidade !== undefined ? r[colMap.cidade] : r[19]) || 'Florianópolis').trim();
+                                    
+                                    // Determina coordenadas baseadas no estado extraído para evitar agrupamento no centro do Brasil
+                                    var baseCoord = UF_COORDINATES[ufVal] || UF_COORDINATES['SC'];
+                                    var latVal = colMap.lat !== undefined && r[colMap.lat] ? Number(r[colMap.lat]) : baseCoord[0] + (Math.random() - 0.5) * 1.5;
+                                    var lngVal = colMap.lng !== undefined && r[colMap.lng] ? Number(r[colMap.lng]) : baseCoord[1] + (Math.random() - 0.5) * 1.5;
+
                                     companies.push({
                                         id: companies.length + 1,
-                                        cnpj: String(r[1] || r[0] || '').trim(),
-                                        empresa: String(r[5] || r[2] || 'Empresa ' + i).trim(),
-                                        uf: String(r[18] || 'MS').trim().toUpperCase(),
-                                        cidade: String(r[19] || 'Campo Grande').trim(),
+                                        cnpj: String((colMap.cnpj !== undefined ? r[colMap.cnpj] : r[1]) || r[0] || '').trim(),
+                                        empresa: String((colMap.empresa !== undefined ? r[colMap.empresa] : r[5]) || 'Empresa ' + i).trim(),
+                                        uf: ufVal,
+                                        cidade: cityVal,
                                         pais: 'Brasil',
-                                        segmento: String(r[28] || 'Operador logístico').trim(),
-                                        telefone: String(r[9] || '').trim(),
-                                        email: String(r[7] || '').trim(),
-                                        latitude: -16.6869 + (Math.random() - 0.5) * 3.0,
-                                        longitude: -49.2648 + (Math.random() - 0.5) * 3.0,
+                                        segmento: String((colMap.segmento !== undefined ? r[colMap.segmento] : r[28]) || 'Operador logístico').trim(),
+                                        telefone: String((colMap.telefone !== undefined ? r[colMap.telefone] : r[9]) || '').trim(),
+                                        email: String((colMap.email !== undefined ? r[colMap.email] : r[7]) || '').trim(),
+                                        latitude: latVal,
+                                        longitude: lngVal,
                                         score: 75 + Math.floor(Math.random() * 20)
                                     });
                                 }
                             }
                         } catch(e) { console.error(e); }
                     }
-                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas carregadas com sucesso com todas as colunas preservadas.';
+                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas carregadas com sucesso com identificação inteligente de UF e colunas.';
                     renderDynamicTable();
                     renderAll();
                     scheduleMap();
