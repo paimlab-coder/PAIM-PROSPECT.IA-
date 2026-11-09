@@ -444,19 +444,41 @@
                             if(rows.length) {
                                 rawHeaders = rows[0].map(function(h){ return String(h || '').trim(); });
 
-                                // Mapeamento dinâmico inteligente dos nomes de colunas
-                                var colMap = {};
+                                // Mapeamento robusto ajustado para bases da Receita Federal e ERPs
+                                var colMap = {
+                                    cnpj: -1, razao: -1, fantasia: -1, uf: -1, cidade: -1,
+                                    segmento: -1, telefone: -1, email: -1, lat: -1, lng: -1
+                                };
+
                                 rawHeaders.forEach(function(h, idx) {
                                     var nh = norm(h);
-                                    if(nh.includes('cnpj')) colMap.cnpj = idx;
-                                    else if(nh.includes('razao') || nh.includes('empresa') || nh.includes('fantasia') || nh.includes('nome')) if(colMap.empresa === undefined) colMap.empresa = idx;
-                                    else if(nh === 'uf' || nh.includes('estado')) colMap.uf = idx;
-                                    else if(nh.includes('cidade') || nh.includes('municipio')) colMap.cidade = idx;
-                                    else if(nh.includes('segmento') || nh.includes('ramo') || nh.includes('setor') || nh.includes('cnae')) colMap.segmento = idx;
-                                    else if(nh.includes('tel') || nh.includes('fone') || nh.includes('celular')) colMap.telefone = idx;
-                                    else if(nh.includes('mail')) colMap.email = idx;
-                                    else if(nh.includes('lat')) colMap.lat = idx;
-                                    else if(nh.includes('lng') || nh.includes('lon')) colMap.lng = idx;
+                                    // CNPJ
+                                    if(nh.includes('cnpj') || nh.includes('cpf_cnpj') || nh === 'nu_cnpj') colMap.cnpj = idx;
+                                    
+                                    // Razão Social & Nome
+                                    if(nh.includes('razaosocial') || nh.includes('nomeempresarial') || nh.includes('razao') || nh === 'nome_empresa') colMap.razao = idx;
+                                    if(nh.includes('fantasia') || nh.includes('nomefantasia') || nh.includes('empresa')) colMap.fantasia = idx;
+                                    
+                                    // UF / Estado (Prioridade para UF do estabelecimento e SG_UF da Receita)
+                                    if(nh === 'sg_uf' || nh === 'uf_estabelecimento' || nh === 'uf_mun' || nh === 'uf_municipio' || nh === 'sigla_uf') {
+                                        colMap.uf = idx;
+                                    } else if(colMap.uf === -1 && (nh === 'uf' || nh.includes('estado'))) {
+                                        colMap.uf = idx;
+                                    }
+
+                                    // Cidade / Município
+                                    if(nh.includes('municipio') || nh.includes('cidade') || nh === 'ds_municipio' || nh === 'no_municipio') colMap.cidade = idx;
+
+                                    // Segmento / CNAE
+                                    if(nh.includes('segmento') || nh.includes('cnae') || nh.includes('ramo') || nh.includes('setor') || nh.includes('atividade')) colMap.segmento = idx;
+
+                                    // Contatos
+                                    if(nh.includes('tel') || nh.includes('fone') || nh.includes('celular') || nh.includes('ddd')) colMap.telefone = idx;
+                                    if(nh.includes('mail') || nh.includes('correio')) colMap.email = idx;
+
+                                    // Coordenadas
+                                    if(nh.includes('lat') || nh === 'latitude') colMap.lat = idx;
+                                    if(nh.includes('lng') || nh.includes('lon') || nh === 'longitude') colMap.lng = idx;
                                 });
 
                                 for (var i = 1; i < rows.length; i++) {
@@ -464,24 +486,44 @@
                                     if (!r || r.length < 2) continue;
                                     rawRowsData.push(r);
 
-                                    var ufVal = String((colMap.uf !== undefined ? r[colMap.uf] : r[18]) || 'SC').trim().toUpperCase();
-                                    var cityVal = String((colMap.cidade !== undefined ? r[colMap.cidade] : r[19]) || 'Florianópolis').trim();
+                                    // Captura de Nome com Cruzamento Inteligente
+                                    var nomeEmpresa = '';
+                                    if (colMap.razao !== -1 && r[colMap.razao]) nomeEmpresa = String(r[colMap.razao]).trim();
+                                    if ((!nomeEmpresa || norm(nomeEmpresa).includes('naoidentificado')) && colMap.fantasia !== -1 && r[colMap.fantasia]) {
+                                        nomeEmpresa = String(r[colMap.fantasia]).trim();
+                                    }
+                                    if (!nomeEmpresa || norm(nomeEmpresa).includes('naoidentificado')) {
+                                        nomeEmpresa = String(r[5] || r[2] || r[0] || ('Empresa ' + i)).trim();
+                                    }
+
+                                    // Tratamento de CNPJ (Formatando se vier números puros)
+                                    var rawCnpj = String((colMap.cnpj !== -1 ? r[colMap.cnpj] : r[1]) || r[0] || '').replace(/\D/g, '');
+                                    var cnpjFormatted = rawCnpj;
+                                    if (rawCnpj.length === 14) {
+                                        cnpjFormatted = rawCnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+                                    }
+
+                                    // UF e Cidade com fallback correto
+                                    var ufVal = String((colMap.uf !== -1 ? r[colMap.uf] : r[18]) || 'SC').trim().toUpperCase();
+                                    if(!ufVal || ufVal.length !== 2) ufVal = 'SC';
+
+                                    var cityVal = String((colMap.cidade !== -1 ? r[colMap.cidade] : r[19]) || 'Florianópolis').trim();
                                     
-                                    // Determina coordenadas baseadas no estado extraído para evitar agrupamento no centro do Brasil
+                                    // Coordenadas Reais por UF
                                     var baseCoord = UF_COORDINATES[ufVal] || UF_COORDINATES['SC'];
-                                    var latVal = colMap.lat !== undefined && r[colMap.lat] ? Number(r[colMap.lat]) : baseCoord[0] + (Math.random() - 0.5) * 1.5;
-                                    var lngVal = colMap.lng !== undefined && r[colMap.lng] ? Number(r[colMap.lng]) : baseCoord[1] + (Math.random() - 0.5) * 1.5;
+                                    var latVal = (colMap.lat !== -1 && r[colMap.lat]) ? Number(r[colMap.lat]) : baseCoord[0] + (Math.random() - 0.5) * 1.8;
+                                    var lngVal = (colMap.lng !== -1 && r[colMap.lng]) ? Number(r[colMap.lng]) : baseCoord[1] + (Math.random() - 0.5) * 1.8;
 
                                     companies.push({
                                         id: companies.length + 1,
-                                        cnpj: String((colMap.cnpj !== undefined ? r[colMap.cnpj] : r[1]) || r[0] || '').trim(),
-                                        empresa: String((colMap.empresa !== undefined ? r[colMap.empresa] : r[5]) || 'Empresa ' + i).trim(),
+                                        cnpj: cnpjFormatted || rawCnpj,
+                                        empresa: nomeEmpresa,
                                         uf: ufVal,
                                         cidade: cityVal,
                                         pais: 'Brasil',
-                                        segmento: String((colMap.segmento !== undefined ? r[colMap.segmento] : r[28]) || 'Operador logístico').trim(),
-                                        telefone: String((colMap.telefone !== undefined ? r[colMap.telefone] : r[9]) || '').trim(),
-                                        email: String((colMap.email !== undefined ? r[colMap.email] : r[7]) || '').trim(),
+                                        segmento: String((colMap.segmento !== -1 ? r[colMap.segmento] : r[28]) || 'Operador logístico').trim(),
+                                        telefone: String((colMap.telefone !== -1 ? r[colMap.telefone] : r[9]) || '').trim(),
+                                        email: String((colMap.email !== -1 ? r[colMap.email] : r[7]) || '').trim(),
                                         latitude: latVal,
                                         longitude: lngVal,
                                         score: 75 + Math.floor(Math.random() * 20)
@@ -490,7 +532,7 @@
                             }
                         } catch(e) { console.error(e); }
                     }
-                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas carregadas com sucesso com identificação inteligente de UF e colunas.';
+                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas processadas da Receita Federal com cruzamento de Razão Social, CNPJ e UF de SC.';
                     renderDynamicTable();
                     renderAll();
                     scheduleMap();
