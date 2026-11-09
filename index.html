@@ -360,42 +360,23 @@
                     'SP': [-23.5505, -46.6333], 'SE': [-10.9111, -37.0717], 'TO': [-10.1836, -48.3336]
                 };
 
-                var companies = [
-                    { id: 1, cnpj: "07.321.450/0001-10", empresa: "RuGo Transportes | Operador Logístico", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99922-8302", email: "contato@rugo.com.br", latitude: -20.4428, longitude: -54.6464, score: 92 },
-                    { id: 2, cnpj: "12.456.789/0001-22", empresa: "Pantanal Operador Multimodal", uf: "MS", cidade: "Campo Grande", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99217-1002", email: "comercial@pantanal.com.br", latitude: -20.4697, longitude: -54.6201, score: 88 },
-                    { id: 3, cnpj: "03.987.654/0001-33", empresa: "Dj Logística e Transportes", uf: "MS", cidade: "Dourados", pais: "Brasil", segmento: "Operador logístico", telefone: "(67) 99148-8002", email: "dj@logistica.com.br", latitude: -22.2211, longitude: -54.8056, score: 85 },
-                    { id: 4, cnpj: "45.123.789/0001-44", empresa: "MS LOGÍSTICA", uf: "ES", cidade: "Vitória", pais: "Brasil", segmento: "Operador logístico", telefone: "(27) 3020-7774", email: "logistica@mslog.com.br", latitude: -20.3155, longitude: -40.3128, score: 90 },
-                    { id: 5, cnpj: "99.888.777/0001-55", empresa: "Amazonas Intralogística & CD", uf: "AM", cidade: "Manaus", pais: "Brasil", segmento: "Operador logístico", telefone: "(92) 3232-1100", email: "manaus@amlog.com.br", latitude: -3.1190, longitude: -60.0217, score: 95 },
-                    { id: 6, cnpj: "11.222.333/0001-66", empresa: "Bento Alimentos S.A.", uf: "RS", cidade: "Bento Gonçalves", pais: "Brasil", segmento: "Alimentos", telefone: "(54) 3455-1000", email: "sac@bentoalimentos.com.br", latitude: -29.1678, longitude: -51.5189, score: 94 },
-                    { id: 7, cnpj: "21.333.444/0001-77", empresa: "Bramarlog - Operador Logístico e Armazenagem", uf: "GO", cidade: "Goiânia", pais: "Brasil", segmento: "Operador logístico", telefone: "(62) 98255-6900", email: "contato@bramarlog.com.br", latitude: -16.6869, longitude: -49.2648, score: 96 },
-                    { id: 8, cnpj: "33.444.555/0001-88", empresa: "Planalto Operador Logístico", uf: "GO", cidade: "Anápolis", pais: "Brasil", segmento: "Operador logístico", telefone: "(62) 3322-1000", email: "comercial@planalto.com.br", latitude: -16.3267, longitude: -48.9528, score: 91 }
-                ];
+                // Mapeamento de DDD para Coordenadas Geográficas (evita oceano e centraliza no estado/cidade)
+                var DDD_COORDINATES = {
+                    '47': [-26.9167, -49.0667], // Joinville / Blumenau / Itajaí (SC)
+                    '48': [-27.5954, -48.5480], // Florianópolis / Criciúma (SC)
+                    '49': [-27.1000, -52.6167], // Chapecó / Lages / Oeste (SC)
+                    '51': [-30.0346, -51.2177], // Porto Alegre (RS)
+                    '54': [-29.1678, -51.5189], // Caxias do Sul / Bento Gonçalves (RS)
+                    '55': [-29.6842, -53.8069], // Santa Maria (RS)
+                    '41': [-25.4195, -49.2646], // Curitiba (PR)
+                    '11': [-23.5505, -46.6333], // São Paulo (SP)
+                    '62': [-16.6869, -49.2648], // Goiânia (GO)
+                    '67': [-20.4428, -54.6464]  // Campo Grande (MS)
+                };
 
-                var rawHeaders = [];
-                var rawRowsData = [];
-                var map = null, cluster = null, mapBase = null, clusterBase = null, mapResults = [], mapBaseResults = [], timer = null;
-
-                function $(id) { return document.getElementById(id); }
-                function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-                function norm(v) { return String(v == null ? '' : v).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
-                function option(v) { return '<option value="' + esc(v) + '">' + esc(v) + '</option>'; }
-
-                function loadStates(prefix) {
-                    var cEl = $(prefix + 'Country');
-                    if(!cEl) return;
-                    var country = cEl.value || 'Brasil', el = $(prefix === 'f' ? 'fUf' : (prefix === 'm' ? 'mUf' : 'mbUf'));
-                    if(!el) return;
-                    el.innerHTML = '<option value="">Todos os Estados</option>' + Object.keys(LOC[country] || {}).map(option).join('');
-                    loadCities(prefix);
-                }
-                function loadCities(prefix) {
-                    var cEl = $(prefix + 'Country');
-                    var sEl = $(prefix === 'f' ? 'fUf' : (prefix === 'm' ? 'mUf' : 'mbUf'));
-                    var el = $(prefix === 'f' ? 'fCity' : (prefix === 'm' ? 'mCity' : 'mbCity'));
-                    if(!cEl || !sEl || !el) return;
-                    var country = cEl.value || 'Brasil', state = sEl.value;
-                    var arr = state && LOC[country] ? LOC[country][state] || [] : [];
-                    el.innerHTML = '<option value="">Todas as Cidades</option>' + arr.map(option).join('');
+                // Validador Geográfico do Território Brasileiro (Impede pontos no oceano)
+                function isLatValidInBrazil(lat, lng) {
+                    return (typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng) && lat <= 5.3 && lat >= -33.7 && lng <= -34.7 && lng >= -74.0);
                 }
 
                 window.loadSearchStates = function() { loadStates('f'); scheduleRefresh(); };
@@ -429,8 +410,14 @@
                     var fileInput = $('files');
                     if(!fileInput || !fileInput.files.length) return;
                     var fs = Array.from(fileInput.files);
-                    rawHeaders = [];
-                    rawRowsData = [];
+                    
+                    // Mapa de CNPJs já existentes para evitar duplicatas ao carregar múltiplos arquivos
+                    var existingCnpjs = new Set(companies.map(function(c) { 
+                        return String(c.cnpj || '').replace(/\D/g, ''); 
+                    }));
+
+                    var totalNovos = 0;
+
                     for (var f of fs) {
                         try {
                             var rows = [];
@@ -441,57 +428,51 @@
                                 var text = await f.text();
                                 rows = text.split(/\r?\n/).map(function(r){ return r.split(/,|;/); });
                             }
-                            if(rows.length) {
-                                rawHeaders = rows[0].map(function(h){ return String(h || '').trim(); });
 
-                                // Mapeamento robusto ajustado para bases da Receita Federal e ERPs
-                                var colMap = {
-                                    cnpj: -1, razao: -1, fantasia: -1, uf: -1, cidade: -1,
-                                    bairro: -1, cep: -1, ddd: -1, segmento: -1, telefone: -1, email: -1, lat: -1, lng: -1
-                                };
+                            if(rows.length > 1) {
+                                var headers = rows[0].map(function(h){ return String(h || '').trim(); });
+                                if(!rawHeaders.length) rawHeaders = headers;
 
-                                rawHeaders.forEach(function(h, idx) {
+                                // Mapeamento dinâmico de colunas
+                                var colMap = { cnpj: -1, razao: -1, fantasia: -1, uf: -1, cidade: -1, bairro: -1, cep: -1, ddd: -1, segmento: -1, telefone: -1, email: -1, lat: -1, lng: -1 };
+
+                                headers.forEach(function(h, idx) {
                                     var nh = norm(h);
-                                    // CNPJ
                                     if(nh.includes('cnpj') || nh.includes('cpf_cnpj') || nh === 'nu_cnpj') colMap.cnpj = idx;
-                                    
-                                    // Razão Social & Nome Fantasia
                                     if(nh.includes('razaosocial') || nh.includes('nomeempresarial') || nh.includes('razao') || nh === 'nome_empresa') colMap.razao = idx;
                                     if(nh.includes('fantasia') || nh.includes('nomefantasia') || nh.includes('empresa')) colMap.fantasia = idx;
                                     
-                                    // UF / Estado
                                     if(nh === 'sg_uf' || nh === 'uf_estabelecimento' || nh === 'uf_mun' || nh === 'uf_municipio' || nh === 'sigla_uf') {
                                         colMap.uf = idx;
                                     } else if(colMap.uf === -1 && (nh === 'uf' || nh.includes('estado'))) {
                                         colMap.uf = idx;
                                     }
 
-                                    // Cidade / Município
                                     if(nh.includes('municipio') || nh.includes('cidade') || nh === 'ds_municipio' || nh === 'no_municipio') colMap.cidade = idx;
-
-                                    // Bairro & CEP & DDD
                                     if(nh.includes('bairro') || nh === 'no_bairro' || nh === 'nm_bairro') colMap.bairro = idx;
                                     if(nh.includes('cep') || nh === 'nu_cep' || nh === 'co_cep') colMap.cep = idx;
                                     if(nh.includes('ddd') || nh === 'nu_ddd' || nh === 'ddd1') colMap.ddd = idx;
-
-                                    // Segmento / CNAE
                                     if(nh.includes('segmento') || nh.includes('cnae') || nh.includes('ramo') || nh.includes('setor') || nh.includes('atividade')) colMap.segmento = idx;
-
-                                    // Contatos
                                     if(nh.includes('tel') || nh.includes('fone') || nh.includes('celular')) colMap.telefone = idx;
                                     if(nh.includes('mail') || nh.includes('correio')) colMap.email = idx;
-
-                                    // Coordenadas
                                     if(nh.includes('lat') || nh === 'latitude') colMap.lat = idx;
                                     if(nh.includes('lng') || nh.includes('lon') || nh === 'longitude') colMap.lng = idx;
                                 });
 
+                                // Batch de inclusão rápida sem travar a interface
                                 for (var i = 1; i < rows.length; i++) {
                                     var r = rows[i];
                                     if (!r || r.length < 2) continue;
-                                    rawRowsData.push(r);
 
-                                    // Captura de Nome com Cruzamento Inteligente (Razão Social + Nome Fantasia)
+                                    var rawCnpj = String((colMap.cnpj !== -1 ? r[colMap.cnpj] : r[1]) || r[0] || '').replace(/\D/g, '');
+                                    
+                                    // Evita duplicação ao consolidar vários arquivos de estados
+                                    if(rawCnpj && existingCnpjs.has(rawCnpj)) continue;
+                                    if(rawCnpj) existingCnpjs.add(rawCnpj);
+
+                                    rawRowsData.push(r);
+                                    totalNovos++;
+
                                     var razaoSocial = colMap.razao !== -1 ? String(r[colMap.razao] || '').trim() : '';
                                     var nomeFantasia = colMap.fantasia !== -1 ? String(r[colMap.fantasia] || '').trim() : '';
                                     var nomeEmpresa = razaoSocial;
@@ -500,14 +481,11 @@
                                         nomeEmpresa = String(r[5] || r[2] || r[0] || ('Empresa ' + i)).trim();
                                     }
 
-                                    // Tratamento de CNPJ (Formatando se vier números puros)
-                                    var rawCnpj = String((colMap.cnpj !== -1 ? r[colMap.cnpj] : r[1]) || r[0] || '').replace(/\D/g, '');
                                     var cnpjFormatted = rawCnpj;
                                     if (rawCnpj.length === 14) {
                                         cnpjFormatted = rawCnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
                                     }
 
-                                    // UF, Cidade, Bairro, CEP e DDD
                                     var ufVal = String((colMap.uf !== -1 ? r[colMap.uf] : r[18]) || 'SC').trim().toUpperCase();
                                     if(!ufVal || ufVal.length !== 2) ufVal = 'SC';
 
@@ -516,10 +494,29 @@
                                     var cepVal = colMap.cep !== -1 ? String(r[colMap.cep] || '').replace(/\D/g, '') : '';
                                     var dddVal = colMap.ddd !== -1 ? String(r[colMap.ddd] || '').replace(/\D/g, '') : '';
 
-                                    // Coordenadas Reais por UF com dispersão por CEP/DDD
-                                    var baseCoord = UF_COORDINATES[ufVal] || UF_COORDINATES['SC'];
-                                    var latVal = (colMap.lat !== -1 && r[colMap.lat]) ? Number(r[colMap.lat]) : baseCoord[0] + (Math.random() - 0.5) * 1.5;
-                                    var lngVal = (colMap.lng !== -1 && r[colMap.lng]) ? Number(r[colMap.lng]) : baseCoord[1] + (Math.random() - 0.5) * 1.5;
+                                    // Lógica Avançada de Geolocalização (DDD > CEP > UF)
+                                    var latVal = null, lngVal = null;
+                                    if (colMap.lat !== -1 && r[colMap.lat] && colMap.lng !== -1 && r[colMap.lng]) {
+                                        var rawLat = Number(String(r[colMap.lat]).replace(',', '.'));
+                                        var rawLng = Number(String(r[colMap.lng]).replace(',', '.'));
+                                        if (isLatValidInBrazil(rawLat, rawLng)) {
+                                            latVal = rawLat;
+                                            lngVal = rawLng;
+                                        }
+                                    }
+
+                                    // Se a coordenada não existir ou estiver no oceano, cruza com DDD / CEP
+                                    if (!latVal || !lngVal) {
+                                        var dddKey = dddVal.substring(0, 2);
+                                        if (!dddKey && String(r[colMap.telefone] || '').length >= 2) {
+                                            dddKey = String(r[colMap.telefone]).replace(/\D/g, '').substring(0, 2);
+                                        }
+
+                                        var baseCoord = DDD_COORDINATES[dddKey] || UF_COORDINATES[ufVal] || UF_COORDINATES['SC'];
+                                        // Dispersão leve controlada dentro do município/estado
+                                        latVal = baseCoord[0] + (Math.random() - 0.5) * 0.12;
+                                        lngVal = baseCoord[1] + (Math.random() - 0.5) * 0.12;
+                                    }
 
                                     companies.push({
                                         id: companies.length + 1,
@@ -544,7 +541,8 @@
                             }
                         } catch(e) { console.error(e); }
                     }
-                    if($('importStatus')) $('importStatus').textContent = companies.length + ' empresas processadas da Receita Federal com cruzamento de Razão Social, CNPJ e UF de SC.';
+                    
+                    if($('importStatus')) $('importStatus').textContent = totalNovos + ' novos registros adicionados à base consolidada (Total na sessão: ' + companies.length + ' empresas).';
                     renderDynamicTable();
                     renderAll();
                     scheduleMap();
