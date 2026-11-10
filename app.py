@@ -4,7 +4,9 @@ from __future__ import annotations
 import os
 import tempfile
 from pathlib import Path
+
 from flask import Flask, jsonify, make_response, request
+
 import paim_engine as engine
 
 app = Flask(__name__)
@@ -65,7 +67,7 @@ def root():
     return jsonify({
         'ok': True,
         'service': 'PAIM IA PROSPECT API',
-        'version': '46-github-cors',
+        'version': '46-github-get',
         'source': 'Overture Maps',
         'municipalities': len(engine.CITY),
         'startup_error': _startup_error,
@@ -78,19 +80,19 @@ def health():
     status = 200 if not _startup_error and len(engine.CITY) >= 5500 else 503
     return jsonify({
         'ok': status == 200,
-        'version': '46-github-cors',
+        'version': '46-github-get',
         'source': 'Overture Maps',
         'municipalities': len(engine.CITY),
         'error': _startup_error,
     }), status
 
 
-@app.post('/api/prospect')
+@app.route('/api/prospect', methods=['GET','POST'])
 def prospect_api():
     if _startup_error:
         return jsonify({'ok': False, 'error': _startup_error}), 503
 
-    payload = request.get_json(silent=True) or {}
+    payload = request.args.to_dict() if request.method == 'GET' else (request.get_json(silent=True) or {})
     try:
         city = str(payload.get('city', '')).strip()
         uf = str(payload.get('uf', '')).strip().upper()
