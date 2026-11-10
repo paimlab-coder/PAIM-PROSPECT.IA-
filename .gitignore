@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+cache_overture/
+*.geojson
+*.geojsonseq
+*.parquet
+*.state
+municipios_brasil.csv
+.env
