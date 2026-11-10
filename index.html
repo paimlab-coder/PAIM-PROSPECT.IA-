@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="pt-BR">
-    <head>
+<html lang="pt-BR"><head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>PAIM IA PROSPECT VER46 DEFINITIVO BRASIL · LIMITE 1500 · Bertolini BSA</title>
@@ -108,7 +106,7 @@
             <div class="main">
                 <header class="top">
                     <b>PAIM IA PROSPECT · MOTOR B2B BSA</b>
-                    <span class="tag" id="topStatus">Nenhuma base carregada</span>
+                    <span class="tag" id="topStatus">Overture Maps conectado</span>
                 </header>
                 <main class="content">
                     <!-- DASHBOARD -->
@@ -118,7 +116,7 @@
                         <div class="notice">
                             <b>Plataforma ativa:</b> importe um arquivo no Mapa do Hub ou utilize o Mapa de Prospecção para consultar fontes externas.
                         </div>
-                        <div id="activeFilterSummary" class="filter-summary">Filtro atual: todos os registros</div>
+                        <div id="activeFilterSummary" class="filter-summary">Filtro atual: 0 registros</div>
                         <div class="kpis">
                             <div class="kpi"><span>Empresas</span><b id="dTotal">0</b></div>
                             <div class="kpi"><span>Prioridade alta</span><b id="dHigh">0</b></div>
@@ -130,7 +128,7 @@
                         </div>
                         <div class="card">
                             <h2>Segmentos da base</h2>
-                            <div id="segments" class="empty">Carregando segmentos...</div>
+                            <div id="segments" class="empty"><div class="empty">Importe uma base.</div></div>
                         </div>
                     </section>
                     <!-- CENTRAL DE BASES -->
@@ -150,7 +148,7 @@
                         <div class="card">
                             <h2>Gerenciar Importação</h2>
                             <div class="row">
-                                <input class="file" id="files" type="file" accept=".csv,.txt,.xlsx,.xls" multiple>
+                                <input class="file" id="files" type="file" accept=".csv,.txt,.xlsx,.xls" multiple="">
                                 <button class="btn" id="importBtn">Processar e Alimentar Base</button>
                                 <button class="btn orange" id="exportBtn">Exportar Consolidado CSV</button>
                                 <button class="btn light" id="clearBtn">Limpar Sessão</button>
@@ -161,8 +159,8 @@
                             <h2>Pré-visualização da Base Carregada (Todas as Colunas Preservadas)</h2>
                             <div class="tablebox">
                                 <table>
-                                    <thead><tr id="dynamicHeaders"><th>Carregue um arquivo para ver as colunas</th></tr></thead>
-                                    <tbody id="dynamicRows"><tr><td class="empty">Nenhum dado importado na sessão.</td></tr></tbody>
+                                    <thead><tr id="dynamicHeaders"><th>Carregue um arquivo</th></tr></thead>
+                                    <tbody id="dynamicRows"><tr><td class="empty">Nenhum dado importado.</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
@@ -172,10 +170,10 @@
                         <h1>Busca Empresarial e Inteligência de Mercado (Hub)</h1>
                         <div class="card">
                             <div class="filters">
-                                <label>País<select id="fCountry" onchange="loadSearchStates()"></select></label>
-                                <label>Estado / UF<select id="fUf" onchange="loadSearchCities()"><option value="">Todos os Estados</option></select></label>
-                                <label>Cidade<select id="fCity"><option value="">Todas as Cidades</option></select></label>
-                                <label>Segmento<select id="fSegment"><option value="">Todos os Segmentos</option></select></label>
+                                <label>País<select id="fCountry" onchange="loadSearchStates()"><option value="Brasil">Brasil</option></select></label>
+                                <label>Estado / UF<select id="fUf" onchange="loadSearchCities()"><option value="">Todos os Estados</option><option value="AC">AC</option><option value="AL">AL</option><option value="AM">AM</option><option value="AP">AP</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MG">MG</option><option value="MS">MS</option><option value="MT">MT</option><option value="PA">PA</option><option value="PB">PB</option><option value="PE">PE</option><option value="PI">PI</option><option value="PR">PR</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RO">RO</option><option value="RR">RR</option><option value="RS">RS</option><option value="SC">SC</option><option value="SE">SE</option><option value="SP">SP</option><option value="TO">TO</option></select></label>
+                                <label>Cidade<select id="fCity"><option value="">Selecione uma cidade</option></select></label>
+                                <label>Segmento<select id="fSegment"><option value="">Todos os Segmentos</option><option value="Operador logístico">Operador logístico</option><option value="Centro de distribuição">Centro de distribuição</option><option value="Transportadora">Transportadora</option><option value="Alimentos">Alimentos</option><option value="Bebidas">Bebidas</option><option value="Eletrodomésticos">Eletrodomésticos</option><option value="Autopeças">Autopeças</option><option value="Metalúrgica">Metalúrgica</option><option value="Moveleira">Moveleira</option><option value="Farmacêutica">Farmacêutica</option><option value="Atacadista">Atacadista</option><option value="Supermercado">Supermercado</option><option value="E-commerce">E-commerce</option><option value="Agronegócio">Agronegócio</option><option value="Fertilizantes">Fertilizantes</option><option value="Papel e celulose">Papel e celulose</option><option value="Plásticos">Plásticos</option><option value="Química">Química</option><option value="Têxtil">Têxtil</option><option value="Construção">Construção</option><option value="Siderurgia">Siderurgia</option></select></label>
                                 <label>Busca livre<input id="fText" placeholder="Empresa, CNPJ..."></label>
                             </div>
                             <div class="row" style="margin-top:10px">
@@ -184,7 +182,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <h2>Empresas no Hub <span id="searchCount" class="tag"></span></h2>
+                            <h2>Empresas no Hub <span id="searchCount" class="tag">0 contas</span></h2>
                             <div class="tablebox">
                                 <table>
                                     <thead>
@@ -192,7 +190,7 @@
                                             <th>Score</th><th>Empresa</th><th>CNPJ</th><th>Segmento</th><th>Cidade/UF</th><th>Contato</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="searchRows"></tbody>
+                                    <tbody id="searchRows"><tr><td colspan="6" class="empty">Nenhuma empresa.</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
@@ -203,10 +201,10 @@
                         <p class="sub">Análise geográfica exclusiva dos dados carregados por Excel/CSV. Não consulta fontes externas.</p>
                         <div class="card">
                             <div class="map-controls">
-                                <div><label>PAÍS</label><select id="mbCountry" onchange="loadHbStates()"></select></div>
-                                <div><label>ESTADO / UF</label><select id="mbUf" onchange="loadHbCities()"><option value="">Todos</option></select></div>
-                                <div><label>CIDADE</label><select id="mbCity"><option value="">Todas</option></select></div>
-                                <div><label>SEGMENTO</label><select id="mbSegment"><option value="">Todos os Segmentos</option></select></div>
+                                <div><label>PAÍS</label><select id="mbCountry" onchange="loadHbStates()"><option value="Brasil">Brasil</option></select></div>
+                                <div><label>ESTADO / UF</label><select id="mbUf" onchange="loadHbCities()"><option value="">Todos os Estados</option><option value="AC">AC</option><option value="AL">AL</option><option value="AM">AM</option><option value="AP">AP</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MG">MG</option><option value="MS">MS</option><option value="MT">MT</option><option value="PA">PA</option><option value="PB">PB</option><option value="PE">PE</option><option value="PI">PI</option><option value="PR">PR</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RO">RO</option><option value="RR">RR</option><option value="RS">RS</option><option value="SC">SC</option><option value="SE">SE</option><option value="SP">SP</option><option value="TO">TO</option></select></div>
+                                <div><label>CIDADE</label><select id="mbCity"><option value="">Selecione uma cidade</option></select></div>
+                                <div><label>SEGMENTO</label><select id="mbSegment"><option value="">Todos os Segmentos</option><option value="Operador logístico">Operador logístico</option><option value="Centro de distribuição">Centro de distribuição</option><option value="Transportadora">Transportadora</option><option value="Alimentos">Alimentos</option><option value="Bebidas">Bebidas</option><option value="Eletrodomésticos">Eletrodomésticos</option><option value="Autopeças">Autopeças</option><option value="Metalúrgica">Metalúrgica</option><option value="Moveleira">Moveleira</option><option value="Farmacêutica">Farmacêutica</option><option value="Atacadista">Atacadista</option><option value="Supermercado">Supermercado</option><option value="E-commerce">E-commerce</option><option value="Agronegócio">Agronegócio</option><option value="Fertilizantes">Fertilizantes</option><option value="Papel e celulose">Papel e celulose</option><option value="Plásticos">Plásticos</option><option value="Química">Química</option><option value="Têxtil">Têxtil</option><option value="Construção">Construção</option><option value="Siderurgia">Siderurgia</option></select></div>
                             </div>
                             <div class="map-actions">
                                 <button class="btn primary" onclick="refreshMapBase()">Atualizar Mapa Hub Base</button>
@@ -220,7 +218,7 @@
                                 <div class="map-legend" id="mapBaseLegend"></div>
                         </div>
                         <div class="map-layout">
-                            <div id="prospectMapBase" style="height:550px;border-radius:8px"></div>
+                            <div id="prospectMapBase" style="height:550px;border-radius:8px" class="native-map"><div class="native-map-grid"></div><div class="native-label" style="left:12px;top:10px">Mapa do Hub · Excel/CSV</div><div class="native-label" style="right:12px;top:10px">N ↑</div><div class="native-map-badge">0 ponto(s)</div><div class="map-loading">Carregue um Excel/CSV na Central de Bases.</div></div>
                             <aside class="card">
                                 <div class="card-header-flex">
                                     <h3>Empresas no Mapa Hub Base</h3>
@@ -233,9 +231,7 @@
                                                 <th>Empresa</th><th>CNPJ</th><th>Segmento</th><th>Cidade/UF</th><th>Score</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="mapBaseTableBody">
-                                            <tr><td colspan="5" class="empty">Nenhuma empresa encontrada.</td></tr>
-                                        </tbody>
+                                        <tbody id="mapBaseTableBody"><tr><td colspan="5" class="empty">Sem dados.</td></tr></tbody>
                                     </table>
                                 </div>
                             </aside>
@@ -254,13 +250,13 @@
                         <h1>Mapa de Prospecção Externa</h1>
                         <div class="card">
                             <div class="map-controls">
-                                <div><label>PAÍS</label><select id="mCountry" onchange="loadMapStates()"></select></div>
-                                <div><label>ESTADO / PROVÍNCIA</label><select id="mUf" onchange="loadMapCities()"><option value="">Todos</option></select></div>
-                                <div><label>CIDADE</label><select id="mCity"><option value="">Todas</option></select></div>
-                                <div><label>SEGMENTO</label><select id="mSegment"><option value="">Todos os Segmentos</option></select></div>
+                                <div><label>PAÍS</label><select id="mCountry" onchange="loadMapStates()"><option value="Brasil">Brasil</option></select></div>
+                                <div><label>ESTADO / PROVÍNCIA</label><select id="mUf" onchange="loadMapCities()"><option value="">Todos os Estados</option><option value="AC">AC</option><option value="AL">AL</option><option value="AM">AM</option><option value="AP">AP</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MG">MG</option><option value="MS">MS</option><option value="MT">MT</option><option value="PA">PA</option><option value="PB">PB</option><option value="PE">PE</option><option value="PI">PI</option><option value="PR">PR</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RO">RO</option><option value="RR">RR</option><option value="RS">RS</option><option value="SC">SC</option><option value="SE">SE</option><option value="SP">SP</option><option value="TO">TO</option></select></div>
+                                <div><label>CIDADE</label><select id="mCity"><option value="">Selecione uma cidade</option></select></div>
+                                <div><label>SEGMENTO</label><select id="mSegment"><option value="">Todos os Segmentos</option><option value="Operador logístico">Operador logístico</option><option value="Centro de distribuição">Centro de distribuição</option><option value="Transportadora">Transportadora</option><option value="Alimentos">Alimentos</option><option value="Bebidas">Bebidas</option><option value="Eletrodomésticos">Eletrodomésticos</option><option value="Autopeças">Autopeças</option><option value="Metalúrgica">Metalúrgica</option><option value="Moveleira">Moveleira</option><option value="Farmacêutica">Farmacêutica</option><option value="Atacadista">Atacadista</option><option value="Supermercado">Supermercado</option><option value="E-commerce">E-commerce</option><option value="Agronegócio">Agronegócio</option><option value="Fertilizantes">Fertilizantes</option><option value="Papel e celulose">Papel e celulose</option><option value="Plásticos">Plásticos</option><option value="Química">Química</option><option value="Têxtil">Têxtil</option><option value="Construção">Construção</option><option value="Siderurgia">Siderurgia</option></select></div>
                                 <div><label>RAIO: <b id="mRadiusLabel">60 km</b></label><input id="mRadius" type="range" min="5" max="100" step="5" value="60"></div>
                                 <div><label>SCORE DE CONTATO</label><select id="mScore"><option value="0">Todos</option><option value="45">45+</option><option value="70">70+</option></select></div>
-                                <div><label>LIMITE</label><select id="mLimit"><option>25</option><option selected>50</option><option>100</option><option>200</option><option>500</option><option>1000</option><option>1500</option></select></div>
+                                <div><label>LIMITE</label><select id="mLimit"><option>25</option><option selected="">50</option><option>100</option><option>200</option><option>500</option><option>1000</option><option>1500</option></select></div>
                             </div>
                             <div class="map-actions">
                                 <button class="btn primary" id="mSearch">Prospectar com Overture Maps</button>
@@ -271,7 +267,7 @@
                             <div class="map-note" id="mStatus">Selecione Estado, Cidade e Segmento. A prospecção usa Overture Maps, sem Google, API Key ou Overpass.</div>
                         </div>
                         <div class="map-layout">
-                            <div id="prospectMap" style="height:550px;border-radius:8px"></div>
+                            <div id="prospectMap" style="height:550px;border-radius:8px" class="native-map"><div class="native-map-grid"></div><div class="native-label" style="left:12px;top:10px">Prospecção externa · Overture Maps</div><div class="native-label" style="right:12px;top:10px">N ↑</div><div class="native-map-badge">0 ponto(s)</div><div class="map-loading">Selecione os filtros e clique em Prospectar com Overture Maps.</div></div>
                             <aside class="card">
                                 <div class="card-header-flex">
                                     <h3>Empresas encontradas</h3>
@@ -287,9 +283,7 @@
                                                 <th><input type="checkbox" id="selectAllProspects" title="Selecionar todos"></th><th>Empresa</th><th>Origem</th><th>Segmento</th><th>Cidade/UF</th><th>Telefone / E-mail / Site</th><th>Score contato</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="mapCompanyTableBody">
-                                            <tr><td colspan="7" class="empty">Nenhuma empresa encontrada com os filtros atuais.</td></tr>
-                                        </tbody>
+                                        <tbody id="mapCompanyTableBody"><tr><td colspan="7" class="empty">Nenhum prospect externo.</td></tr></tbody>
                                     </table>
                                 </div>
                             </aside>
@@ -360,5 +354,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 </script>
-</body>
-</html>
+
+
+</body></html>
